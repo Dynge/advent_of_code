@@ -37,8 +37,8 @@ function calc_round_points_1(strategy::String)
 
 end
 
-round_points = map(calc_round_points_1, strategy_list)
-total_points = sum(round_points)
+round_points::Vector{Int8} = map(calc_round_points_1, strategy_list)
+total_points::Int32 = sum(round_points)
 
 print(
       "Total points if the strategy is perfect in part 1: ",
@@ -76,8 +76,8 @@ function calc_round_points_2(strategy::String)
 
 end
 
-round_points = map(calc_round_points_2, strategy_list)
-total_points = sum(round_points)
+round_points::Vector{Int8} = map(calc_round_points_2, strategy_list)
+total_points::Int32 = sum(round_points)
 
 print(
       "Total points if the strategy is perfect in part 2: ",
