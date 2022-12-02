@@ -4,7 +4,12 @@ food_list = read(data, String)
 
 # Create a list of lists
 separate_elves = split(chomp(food_list), "\n\n")
-food_pr_elf = map(elf_list -> [parse(Int32, calorie) for calorie in split(elf_list, "\n")], separate_elves)
+food_pr_elf = map(
+                  elf_list -> [
+                               parse(Int32, calorie) for calorie in split(elf_list, "\n")
+                              ],
+                  separate_elves
+                 )
 
 ###############################
 println("Part 1:")
