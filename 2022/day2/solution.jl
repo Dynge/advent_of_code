@@ -2,7 +2,7 @@
 data = open("data.txt", "r");
 strategy_data = chomp(read(data, String))
 
-strategy_list = [
+strategy_list::Vector{String} = [
                  game_strategy
                  for game_strategy in split(strategy_data, "\n")
                 ]
@@ -11,7 +11,7 @@ strategy_list = [
 #################################
 println("Part 1:")
 
-function calc_round_points_1(strategy)
+function calc_round_points_1(strategy::String)
 
   points = Dict{String, Int8}(
                   "win" => 6,
@@ -50,7 +50,7 @@ print(
 println("Part 2:")
 
 
-function calc_round_points_2(strategy)
+function calc_round_points_2(strategy::String)
 
   points = Dict{String, Int8}(
                   "win" => 6,
