@@ -11,7 +11,7 @@ strategy_list::Vector{String} = [
 #################################
 println("Part 1:")
 
-function calc_round_points_1(strategy::String)
+function calc_round_points_1(strategy::String)::Int8
 
   points = Dict{String, Int8}(
                   "win" => 6,
@@ -50,7 +50,7 @@ print(
 println("Part 2:")
 
 
-function calc_round_points_2(strategy::String)
+function calc_round_points_2(strategy::String)::Int8
 
   points = Dict{String, Int8}(
                   "win" => 6,
