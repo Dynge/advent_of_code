@@ -1,4 +1,4 @@
-data = open("data.txt", "r");
+data = open("/home/michael/git/advent_of_code/2022/day3/data.txt", "r");
 rucksack_list = readlines(data)
 close(data)
 
