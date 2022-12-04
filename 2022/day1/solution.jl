@@ -1,6 +1,7 @@
 # Import data
 data = open("data.txt", "r");
 food_list = read(data, String)
+close(data)
 
 # Create a list of lists
 separate_elves::Vector{String} = split(chomp(food_list), "\n\n")
