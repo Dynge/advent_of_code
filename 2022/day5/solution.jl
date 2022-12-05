@@ -1,6 +1,6 @@
 function extract_blocks(row_block_in_strings)
   crate_vectors::Vector{Vector{Char}} = [[] for _ in 1:9]
-  data_cols = collect(2:4:length(row_block_in_strings[1])-1)
+  data_cols = 2:4:length(row_block_in_strings[1])-1
   for string in reverse(row_block_in_strings)
     for (block_num, col) in enumerate(data_cols)
       if string[col] != ' '
