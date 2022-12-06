@@ -38,4 +38,40 @@ function main()
          )
 end
 
+
 @time main()
+
+function sets_main()
+  # Import data
+  data = open(f -> chomp(read(f, String)), "./2022/day6/data.txt", "r");
+
+  #################
+  println("Part 1:")
+
+  packet_len = 4
+  for index in packet_len+1:length(data)
+    if length(Set(data[index-(packet_len-1):index])) == packet_len
+      println(
+              "The (0-based) index of the first start-of-packet signal is at: ",
+              index
+             )
+      break
+    end
+  end
+
+  ###################
+  println("Part 2:")
+
+  message_len = 14
+  for index in message_len+1:length(data)
+    if length(Set(data[index-(message_len-1):index])) == message_len
+      println(
+              "The (0-based) index of the first start-of-message signal is at: ",
+              index
+             )
+      break
+    end
+  end
+end
+
+@time sets_main()
