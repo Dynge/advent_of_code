@@ -25,3 +25,8 @@ Manifest.toml
 
 # Custom for this repo
 session_cookie.txt
+
+
+# Added by cargo
+
+/target

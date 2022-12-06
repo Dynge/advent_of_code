@@ -33,50 +33,50 @@ const STRATEGY_GUIDE_2 = Dict{String, Vector{String}}(
 
 
 function calc_round_points_1(strategy::String)::Int8
-  return sum([POINTS[result] for result in STRATEGY_GUIDE_1[strategy]])
+    return sum([POINTS[result] for result in STRATEGY_GUIDE_1[strategy]])
 end
 
 function calc_round_points_2(strategy::String)::Int8
-  return sum([POINTS[result] for result in STRATEGY_GUIDE_2[strategy]])
+    return sum([POINTS[result] for result in STRATEGY_GUIDE_2[strategy]])
 end
 
 
 function main()
-  # Import data
-  data = open("./2022/day2/data.txt", "r");
-  strategy_data = chomp(read(data, String))
-  close(data)
+    # Import data
+    data = open("./2022/day2/data.txt", "r");
+    strategy_data = chomp(read(data, String))
+    close(data)
 
-  strategy_list::Vector{String} = [
+    strategy_list::Vector{String} = [
                    game_strategy
                    for game_strategy in split(strategy_data, "\n")
                   ]
 
-  #################################
-  println("Part 1:")
+    #################################
+    println("Part 1:")
 
-  round_points::Vector{Int8} = map(calc_round_points_1, strategy_list)
-  total_points::Int32 = sum(round_points)
+    round_points::Vector{Int8} = map(calc_round_points_1, strategy_list)
+    total_points::Int32 = sum(round_points)
 
-  print(
-        "Total points if the strategy is perfect in part 1: ",
-        total_points,
-        "\n"
-      )
+    print(
+          "Total points if the strategy is perfect in part 1: ",
+          total_points,
+          "\n"
+         )
 
-  ###########################
-  println("Part 2:")
+    ###########################
+    println("Part 2:")
 
 
 
-  round_points = map(calc_round_points_2, strategy_list)
-  total_points = sum(round_points)
+    round_points = map(calc_round_points_2, strategy_list)
+    total_points = sum(round_points)
 
-  print(
-        "Total points if the strategy is perfect in part 2: ",
-        total_points,
-        "\n"
-      )
+    print(
+          "Total points if the strategy is perfect in part 2: ",
+          total_points,
+          "\n"
+         )
 
 end
 
