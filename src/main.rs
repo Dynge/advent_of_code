@@ -23,7 +23,7 @@ fn day1() -> Vec<i32> {
         .collect();
 
     let mut elf_sums: Vec<i32> = vec![];
-    for elf_store in combined_elf_food_list {
+    for elf_store in &combined_elf_food_list {
         elf_sums.push(elf_store.iter().sum())
     }
 
@@ -31,9 +31,9 @@ fn day1() -> Vec<i32> {
 
     // Part 2
     elf_sums.sort();
-    let top3_sums = &elf_sums[elf_sums.len()-3..].iter().sum();
+    let top3_sums: i32 = elf_sums[elf_sums.len()-3..].iter().sum();
 
-    result.push(*top3_sums);
+    result.push(top3_sums);
 
     return result;
 }
