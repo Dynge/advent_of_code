@@ -86,9 +86,9 @@ fn day7() -> Vec<i32> {
     let current_file_item: FileItem = &mut file_system;
     for line in data.split("\n") {
         if line.starts_with("$ cd") {
+            if line.matches(r"\w+"). == String::from("/") {
 
-            
-
+            }
         }
 
     }
