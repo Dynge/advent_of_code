@@ -1,5 +1,5 @@
-use std::fs;
-use std::collections::HashSet;
+use std::{fs, vec};
+use std::collections::{HashSet, HashMap};
 use std::iter::Iterator;
 
 fn main() {
@@ -64,3 +64,33 @@ fn day6() -> Vec<i32> {
     return result
 }
 
+fn day7() -> Vec<i32> {
+    let data = fs::read_to_string("./2022/day7/data.txt").expect("Couldn't read data :(");
+
+    #[derive(Debug)]
+    struct FileItem {
+        name: String,
+        size: i32,
+        subdirs: Option<Box<Vec<FileItem>>>,
+        parent: Option<Box<FileItem>>
+    }
+
+    let mut file_system = FileItem{
+        name: String::from("/"),
+        size: 0,
+        subdirs: None,
+        parent: None
+    };
+
+
+    let current_file_item: FileItem = &mut file_system;
+    for line in data.split("\n") {
+        if line.starts_with("$ cd") {
+
+            
+
+        }
+
+    }
+    unimplemented!();
+}
