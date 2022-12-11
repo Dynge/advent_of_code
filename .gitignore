@@ -30,3 +30,6 @@ session_cookie.txt
 # Added by cargo
 
 /target
+
+# Dont commit data
+**/data.txt

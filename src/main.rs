@@ -5,7 +5,7 @@ use y2022::{
     day2,
     day6,
     day7,
-    // day9,
+    day9,
 };
 
 fn main() {
@@ -18,6 +18,6 @@ fn main() {
     println!("Day 2 Results - {:?}", rs_day2);
     println!("Day 6 Results - {:?}", rs_day6);
     println!("Day 7 Results - {:?}", rs_day7);
-    // println!("Day 9 Results - {:?}", rs_day9);
+    println!("Day 9 Results - {:?}", day9());
 }
 
