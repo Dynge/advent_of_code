@@ -1,5 +1,3 @@
-
-
 function load_monkeys()
   data = open(readchomp, "./2022/day11/data.txt", "r");
   monkey_strings = split(data, "\n\n")
@@ -74,7 +72,7 @@ function main()
     least_common_multiple *= monkey.test_divide
   end
 
-  for round in 1:1:10000
+  for _ in 1:1:10000
     for monkey in monkeys
       for item in monkey.items
         item = monkey_operation(monkey, item)
