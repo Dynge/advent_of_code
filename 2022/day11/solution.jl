@@ -23,8 +23,8 @@ function load_monkeys()
 end
 
 mutable struct Monkey
-  items::Vector
-  inspected::Int32
+  items::Vector{BigInt}
+  inspected::Int64
   operation_string::RegexMatch
   test_divide::Int8
   test_true::Int8
@@ -35,25 +35,30 @@ function monkey_test(monkey, item)
   return item % monkey.test_divide == 0 ? monkey.test_true : monkey.test_false
 end
 
-function monkey_operation(monkey, item)
+function monkey_shrink_item(lcm, item)
+  if item > lcm
+    remainder = item % lcm
+    return lcm + remainder
+  end
+
+  return item
+end
+
+function monkey_operation(monkey, item)::BigInt
   string = monkey.operation_string
   captures = string.captures
   if captures[1] == "*"
     if captures[3] !== nothing
-      println("HELLO1")
       op_val = parse(Int, captures[3])
       return item * op_val
     else
-      println("HELLO2")
       return item^2
     end
   else captures[1] == "+"
     if captures[3] !== nothing
-      println("HELLO3")
       op_val = parse(Int, captures[3])
       return item + op_val
     else
-      println("HELLO4")
       return item + item
     end
   end
@@ -64,12 +69,16 @@ end
 function main()
   monkeys = load_monkeys()
 
-  for round in 1:1:1
+  least_common_multiple = 1
+  for monkey in monkeys
+    least_common_multiple *= monkey.test_divide
+  end
+
+  for round in 1:1:10000
     for monkey in monkeys
       for item in monkey.items
-        println("BEFORE ", item)
-        item = floor(monkey_operation(monkey, item) / 3)
-        println("AFTER ", item)
+        item = monkey_operation(monkey, item)
+        item = monkey_shrink_item(least_common_multiple, item)
         monkey.inspected += 1
         throw_to = monkey_test(monkey, item)
         push!(monkeys[throw_to].items, item)
@@ -77,11 +86,6 @@ function main()
       monkey.items = []
     end
   end
-
-  for (i, monkey) in enumerate(monkeys)
-    println(i, " ", monkey)
-  end
-
 
   sorted_monkeys = sort([monkey.inspected for monkey in monkeys])[end-1:end]
   println(sorted_monkeys)
@@ -91,11 +95,3 @@ end
 
 
 @time main()
-
-
-monkeys = load_monkeys()
-
-monkey_operation(monkeys[3], 79)
-monkeys[3].operation_string
-
-
