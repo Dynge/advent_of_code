@@ -106,22 +106,3 @@ fn unacceptable_distance(h: &Array1<i32>, t: &Array1<i32>) -> bool {
     return acceptable_distance_arr.len() != 2
 
 }
-
-struct RopeWithTwoKnots {
-    henry: Array1<i32>,
-    terry: Array1<i32>,
-}
-
-
-struct RopeWithTenKnots {
-    h00: Array1<i32>,
-    h02: Array1<i32>,
-    h03: Array1<i32>,
-    h04: Array1<i32>,
-    h05: Array1<i32>,
-    h06: Array1<i32>,
-    h07: Array1<i32>,
-    h08: Array1<i32>,
-    h09: Array1<i32>,
-    h10: Array1<i32>,
-}
