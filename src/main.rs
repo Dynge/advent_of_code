@@ -20,4 +20,3 @@ fn main() {
     println!("Day 7 Results - {:?}", rs_day7);
     println!("Day 9 Results - {:?}", day9());
 }
-
