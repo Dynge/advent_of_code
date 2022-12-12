@@ -84,7 +84,8 @@ function main_bfs()
   (edges, start_index, end_index) = load_graph(mat)
   graph = Graphs.SimpleDiGraph(Graphs.Edge.(edges))
   solution = Graphs.bellman_ford_shortest_paths(graph, start_index)
-  println("Fewest steps: ", length(solution.dists[end_index]))
+  solution.dists[end_index]
+  println("Fewest steps from 'S' is: ", solution.dists[end_index])
 
   println("Part 2: ")
   start_pos = possible_start_positions(mat)
@@ -99,7 +100,7 @@ function main_djek()
   (edges, start_index, end_index) = load_graph(mat)
   graph = Graphs.SimpleDiGraph(Graphs.Edge.(edges))
   solution = Graphs.dijkstra_shortest_paths(graph, start_index)
-  println("Fewest steps: ", length(solution.dists[end_index]))
+  println("Fewest steps from 'S' is: ", solution.dists[end_index])
 
   println("Part 2: ")
   start_pos = possible_start_positions(mat)
