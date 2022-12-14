@@ -1,3 +1,7 @@
+module Day11
+
+export day11 
+
 function load_monkeys()
   data = open(readchomp, "./2022/day11.txt", "r");
   monkey_strings = split(data, "\n\n")
@@ -64,7 +68,7 @@ function monkey_operation(monkey, item)::BigInt
 end
 
 
-function main()
+function day11()
   monkeys = load_monkeys()
 
   least_common_multiple = 1
@@ -92,4 +96,4 @@ function main()
 end
 
 
-@time main()
+end

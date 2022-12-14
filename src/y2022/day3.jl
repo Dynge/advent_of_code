@@ -1,3 +1,7 @@
+module Day3
+
+export day3
+
 const ALPHABET::String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 function priority_of_duplicate_item(rucksack::AbstractString)::Int8
@@ -41,7 +45,7 @@ function split_into_groups(rucksack_list::Vector{String}, group_size::Int=3)::Ve
 end
 
 
-function main()
+function day3()
   data = open("./2022/day3.txt", "r");
   rucksack_list = readlines(data)
   close(data)
@@ -73,4 +77,4 @@ function main()
        )
 end
 
-@time main()
+end

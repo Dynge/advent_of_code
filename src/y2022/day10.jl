@@ -1,4 +1,8 @@
-function main()
+module Day10
+
+export day10
+
+function day10()
   data = open(readlines, "./2022/day10.txt", "r");
 
   value::Int64 = 1
@@ -52,4 +56,4 @@ function main()
   
 end
 
-@time main()
+end

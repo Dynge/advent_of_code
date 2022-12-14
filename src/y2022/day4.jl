@@ -1,10 +1,14 @@
+module Day4
+
+export day4
+
 function contained_count(matrix::Matrix)::Int
   # Sum matrix cols
   # If absolute sum is less than two they are fully contained within
   return sum(map(col_sum -> abs(col_sum) < 2, sum(matrix, dims=1)))
 end
 
-function main()
+function day4()
   # Import data
   data = open(readlines, "./2022/day4.txt", "r");
 
@@ -44,4 +48,4 @@ function main()
          )
 end
 
-@time main()
+end

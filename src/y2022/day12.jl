@@ -1,3 +1,7 @@
+module Day12
+
+export day12, day12_bfs, day12_dijkstra, day12_astar
+
 using GraphPlot
 using Compose
 import Graphs
@@ -78,7 +82,7 @@ function possible_start_positions(matrix::Matrix)::Vector{Int}
   return start_pos
 end
 
-function main_bfs()
+function day12_bfs()
   println("Part 1: ")
   mat = load_matrix()
   (edges, start_index, end_index) = load_graph(mat)
@@ -94,7 +98,7 @@ function main_bfs()
   println("Minimum steps from any 'a' is: ", minimum(solution.dists[end_index]))
 end
 
-function main_djek()
+function day12_dijkstra()
   println("Part 1: ")
   mat = load_matrix()
   (edges, start_index, end_index) = load_graph(mat)
@@ -109,7 +113,7 @@ function main_djek()
   println("Minimum steps from any 'a' is: ", minimum(solution.dists[end_index]))
 end
 
-function main_star()
+function day12_astar()
 
   println("Part 1: ")
   mat = load_matrix()
@@ -131,6 +135,8 @@ function main_star()
   println("Minimum steps from any 'a' is: ", minimum(solution_lenghts))
 end
 
+day12() = day12_bfs()
+
 function plot_graph(location::String)
   mat = load_matrix()
   (edges, _, _) = load_graph(mat)
@@ -141,8 +147,9 @@ end
 
 
 
-@time main_bfs() # BFS is Dijkstra for unweighted edges
+# @time main_bfs() # BFS is Dijkstra for unweighted edges
 # @time main_djek() # A little slower than BFS probably because it assumes weights
 # @time main_star() # A lot slower than BFS (both in part 1 and especially in part 2) (heuristic is misleading in this case, and part 2 looping is inefficient)
 
 # plot_graph("day12.svg")
+end

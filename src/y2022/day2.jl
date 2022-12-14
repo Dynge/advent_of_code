@@ -1,3 +1,7 @@
+module Day2
+
+export day2
+
 const POINTS = Dict{String, Int8}(
                 "win" => 6,
                 "draw" => 3,
@@ -41,7 +45,7 @@ function calc_round_points_2(strategy::String)::Int8
 end
 
 
-function main()
+function day2()
     # Import data
     data = open("./2022/day2.txt", "r");
     strategy_data = chomp(read(data, String))
@@ -80,4 +84,4 @@ function main()
 
 end
 
-@time main()
+end

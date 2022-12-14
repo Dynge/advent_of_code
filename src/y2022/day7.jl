@@ -1,4 +1,8 @@
-function main()
+module Day7
+
+export day7
+
+function day7()
   # Import data
   data = open(readlines, "./2022/day7.txt", "r");
 
@@ -23,3 +27,4 @@ function main()
   end
 end
 
+end

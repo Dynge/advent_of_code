@@ -1,6 +1,10 @@
+module Day8
+
 using IterTools
 
-function main()
+export day8
+
+function day8()
   # Import data
   data = open(readlines, "./2022/day8.txt", "r");
 
@@ -94,4 +98,4 @@ function scenic_score(tree, position, forest)
   return score
 end
 
-@time main()
+end

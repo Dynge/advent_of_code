@@ -1,4 +1,8 @@
-function main()
+module Day1
+
+export day1
+
+function day1()
   # Import data
   data = open("./2022/day1.txt", "r");
   food_list = read(data, String)
@@ -35,4 +39,4 @@ function main()
   )
 end
 
-@time main()
+end

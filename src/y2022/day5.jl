@@ -1,3 +1,7 @@
+module Day5
+
+export day5
+
 function extract_blocks(row_block_in_strings)
   crate_vectors::Vector{Vector{Char}} = [[] for _ in 1:9]
   data_cols = 2:4:length(row_block_in_strings[1])-1
@@ -47,7 +51,7 @@ function perform_moves_cratemover_9001(crate_vectors, moves_vector)
 end
 
 
-function main()
+function day5()
   # Import data
   data = open(readlines, "./2022/day5.txt", "r");
   row_block_strings = map(x -> replace(x, r"\[|\]" => " "), data[1:8])
@@ -79,5 +83,4 @@ function main()
 
 end
 
-
-@time main()
+end

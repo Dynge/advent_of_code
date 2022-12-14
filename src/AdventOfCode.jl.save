@@ -1,0 +1,22 @@
+exit()module AdventOfCode
+kj
+
+include("y2022/day1.jl")
+include("y2022/day2.jl")
+
+using .Day1
+using .Day2
+export day1, day2
+
+# include("y2022/day3.jl")
+# include("y2022/day4.jl")
+# include("y2022/day5.jl")
+# include("y2022/day6.jl")
+# include("y2022/day7.jl")
+# include("y2022/day8.jl")
+# include("y2022/day10.jl")
+# include("y2022/day11.jl")
+# include("y2022/day12.jl")
+# include("y2022/day14.jl")
+
+end

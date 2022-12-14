@@ -1,3 +1,8 @@
+module Day6
+
+export day6, day6_sets
+
+
 function create_signal_regex(distinct_chars_count)
   regex_parts = ["(?:"]
   for regex_group in 1:distinct_chars_count-1
@@ -9,7 +14,7 @@ function create_signal_regex(distinct_chars_count)
   return Regex(join(regex_parts))
 end
 
-function main()
+function day6()
   # Import data
   data = open(f -> chomp(read(f, String)), "./2022/day6.txt", "r");
 
@@ -39,9 +44,7 @@ function main()
 end
 
 
-@time main()
-
-function sets_main()
+function day6_sets()
   # Import data
   data = open(f -> chomp(read(f, String)), "./2022/day6.txt", "r");
 
@@ -74,4 +77,4 @@ function sets_main()
   end
 end
 
-@time sets_main()
+end

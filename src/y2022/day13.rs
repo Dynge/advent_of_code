@@ -46,10 +46,10 @@ pub fn day13() -> [i32; 2] {
         Some(false) => Greater,
     });
 
-    let div_two_index: i32 = lines.iter().position(|item| dividiers[0].eq(item)).unwrap().try_into().unwrap();
-    let div_six_index: i32 = lines.iter().position(|item| dividiers[1].eq(item)).unwrap().try_into().unwrap();
-
-    let part2 = (div_two_index + 1) * (div_six_index + 1);
+    let part2: i32 = lines.iter()
+        .enumerate()
+        .filter(|(_, item)| dividiers.contains(item))
+        .fold(1, |accum, (i, _)| accum * (i+1) as i32);
 
     return [ part1, part2 ]
 }
