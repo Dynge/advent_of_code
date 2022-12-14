@@ -11,7 +11,7 @@ end
 
 function main()
   # Import data
-  data = open(f -> chomp(read(f, String)), "./2022/day6/data.txt", "r");
+  data = open(f -> chomp(read(f, String)), "./2022/day6.txt", "r");
 
   #################
   println("Part 1:")
@@ -43,7 +43,7 @@ end
 
 function sets_main()
   # Import data
-  data = open(f -> chomp(read(f, String)), "./2022/day6/data.txt", "r");
+  data = open(f -> chomp(read(f, String)), "./2022/day6.txt", "r");
 
   #################
   println("Part 1:")

@@ -3,7 +3,7 @@ use std::{collections::HashMap, fs};
 
 
 pub fn day7() -> Vec<u32> {
-    let data = fs::read_to_string("./2022/day7/data.txt").expect("Couldn't read data :(");
+    let data = fs::read_to_string("./2022/day7.txt").expect("Couldn't read data :(");
 
     let mut result: Vec<u32> = vec![];
 

@@ -1,5 +1,5 @@
 function load_monkeys()
-  data = open(readchomp, "./2022/day11/data.txt", "r");
+  data = open(readchomp, "./2022/day11.txt", "r");
   monkey_strings = split(data, "\n\n")
   monkeys = []
   for monkey_string in monkey_strings

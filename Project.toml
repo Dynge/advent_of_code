@@ -1,0 +1,4 @@
+name = "advent_of_code"
+uuid = "0d55d293-51cb-4437-85cd-c528c48716d3"
+authors = ["Michael Damsbo Lyngs <michael_lyngs@outlook.dk>"]
+version = "0.1.0"

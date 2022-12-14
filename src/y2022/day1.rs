@@ -1,7 +1,7 @@
 use std::fs;
 
 pub fn day1() -> Vec<i32> {
-    let data = fs::read_to_string("./2022/day1/data.txt").expect("Couldn't read data :(");
+    let data = fs::read_to_string("./2022/day1.txt").expect("Couldn't read data :(");
 
     let mut result: Vec<i32> = vec![];
 

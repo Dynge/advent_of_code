@@ -11,7 +11,7 @@ enum SignalValue {
 }
 
 pub fn day13() -> [i32; 2] {
-    let data = fs::read_to_string("./2022/day13/data.txt").expect("Couldn't read data :(");
+    let data = fs::read_to_string("./2022/day13.txt").expect("Couldn't read data :(");
 
     let groups: Vec<_> = data.split("\n\n").collect();
 

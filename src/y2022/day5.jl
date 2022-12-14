@@ -49,7 +49,7 @@ end
 
 function main()
   # Import data
-  data = open(readlines, "./2022/day5/data.txt", "r");
+  data = open(readlines, "./2022/day5.txt", "r");
   row_block_strings = map(x -> replace(x, r"\[|\]" => " "), data[1:8])
 
   #################

@@ -43,7 +43,7 @@ end
 
 function main()
     # Import data
-    data = open("./2022/day2/data.txt", "r");
+    data = open("./2022/day2.txt", "r");
     strategy_data = chomp(read(data, String))
     close(data)
 

@@ -32,4 +32,4 @@ session_cookie.txt
 /target
 
 # Dont commit data
-**/data.txt
+2022/*.txt

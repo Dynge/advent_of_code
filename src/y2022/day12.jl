@@ -3,7 +3,7 @@ using Compose
 import Graphs
 
 function load_matrix()
-  data = open(readchomp, "./2022/day12/data.txt", "r")
+  data = open(readchomp, "./2022/day12.txt", "r")
   return mapreduce(permutedims, vcat, collect(map(line -> [char for char in line], split(data, "\n"))))
 end
 

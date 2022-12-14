@@ -42,7 +42,7 @@ end
 
 
 function main()
-  data = open("./2022/day3/data.txt", "r");
+  data = open("./2022/day3.txt", "r");
   rucksack_list = readlines(data)
   close(data)
 

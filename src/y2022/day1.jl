@@ -1,6 +1,6 @@
 function main()
   # Import data
-  data = open("./2022/day1/data.txt", "r");
+  data = open("./2022/day1.txt", "r");
   food_list = read(data, String)
   close(data)
 

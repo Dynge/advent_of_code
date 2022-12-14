@@ -2,7 +2,7 @@ using IterTools
 
 function main()
   # Import data
-  data = open(readlines, "./2022/day8/data.txt", "r");
+  data = open(readlines, "./2022/day8.txt", "r");
 
   ###########
   println("Part 1:")

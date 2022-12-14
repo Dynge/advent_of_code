@@ -4,7 +4,7 @@ use ndarray::{array, Array1};
 
 
 pub fn day9() -> Vec<i32> {
-    let data = fs::read_to_string("./2022/day9/data.txt").expect("Couldn't read data :(");
+    let data = fs::read_to_string("./2022/day9.txt").expect("Couldn't read data :(");
 
     let mut result: Vec<i32> = vec![];
 

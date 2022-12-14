@@ -1,7 +1,7 @@
 use std::{fs, collections::HashSet};
 
 pub fn day6() -> Vec<i32> {
-    let data = fs::read_to_string("./2022/day6/data.txt").expect("Couldn't read data :(");
+    let data = fs::read_to_string("./2022/day6.txt").expect("Couldn't read data :(");
 
     let mut result: Vec<i32> = vec![];
 

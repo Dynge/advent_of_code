@@ -1,5 +1,5 @@
 function main()
-  data = open(readlines, "./2022/day10/data.txt", "r");
+  data = open(readlines, "./2022/day10.txt", "r");
 
   value::Int64 = 1
   cycle::Int64 = 0

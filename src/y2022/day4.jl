@@ -6,7 +6,7 @@ end
 
 function main()
   # Import data
-  data = open(readlines, "./2022/day4/data.txt", "r");
+  data = open(readlines, "./2022/day4.txt", "r");
 
   ####################
   println("Part 1:")

@@ -63,7 +63,7 @@ fn p2() -> i32 {
 }
 
 fn load_data() -> Vec<String> {
-    let data = fs::read_to_string("./2022/day2/data.txt")
+    let data = fs::read_to_string("./2022/day2.txt")
         .expect("Couldn't read data :(");
     let lines: Vec<&str> = data.lines().collect();
     let owned_strings: Vec<String> = lines.iter().map(|&line| String::from(line)).collect();

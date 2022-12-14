@@ -1,6 +1,6 @@
 function main()
   # Import data
-  data = open(readlines, "./2022/day7/data.txt", "r");
+  data = open(readlines, "./2022/day7.txt", "r");
 
   current_dir = ""
 
