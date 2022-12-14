@@ -18,25 +18,14 @@ function day1()
                    )
 
   ###############################
-  println("Part 1:")
-
-  print(
-    "The elf carrying the most calories is carrying: ",
-    maximum(sum, food_pr_elf),
-    "\n", 
-  )
+  results = [maximum(sum, food_pr_elf)]
 
   ################################
-  println("Part 2:")
-
   calorie_sum_of_each_elf::Vector{Int32} = map(sum, food_pr_elf)
   sum_of_top3_elves::Int32 = sum(sort!(calorie_sum_of_each_elf, rev=true)[1:3])
 
-  print(
-    "The combined calories of the top 3 elves are: ",
-    sum_of_top3_elves,
-    "\n", 
-  )
+  push!(results, sum_of_top3_elves)
+  println("Day 1 Results - ", results)
 end
 
 end

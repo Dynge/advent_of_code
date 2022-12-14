@@ -13,8 +13,6 @@ function day4()
   data = open(readlines, "./2022/day4.txt", "r");
 
   ####################
-  println("Part 1:")
-
   # Clean data -- one matrix representing the first elves and another for all the seconds elves in the cleanup pairs.
   cleanup_pairs_vector::Vector{Vector{AbstractString}} = map(x -> split(x, ","), data)
   cleanup_pairs_matrix::Matrix{AbstractString} = reduce(hcat,cleanup_pairs_vector)
@@ -27,25 +25,16 @@ function day4()
   difference_matrix = map(sign, cleanup_elf_one_range - cleanup_elf_two_range)
 
 
-  println(
-          "The amount of elves that are assigned to sections ",
-          "that are fully contained are: ",
-          contained_count(difference_matrix)
-         )
+  results = [contained_count(difference_matrix)]
 
   #######################
-  println("Part 2:")
-
   # Same procedure as Part 1, but instead of subtracting beginning from beginnig and end from end,
   # you subtract end from beginings.
   flipped_cleanup_elf_one_range = cleanup_elf_one_range[end:-1:1, :]
   difference_matrix_2 = map(sign, flipped_cleanup_elf_one_range - cleanup_elf_two_range)
 
-  println(
-          "The amount of elves that are assigned to sections ",
-          "that are overlapping are: ",
-          contained_count(difference_matrix_2)
-         )
+  push!(results, contained_count(difference_matrix_2))
+  println("Day 4 Results - ", results)
 end
 
 end

@@ -57,30 +57,20 @@ function day5()
   row_block_strings = map(x -> replace(x, r"\[|\]" => " "), data[1:8])
 
   #################
-  println("Part 1:")
-
   crate_vectors = extract_blocks(row_block_strings)
   moves_vector = extract_moves(data[11:end])
 
   cratemover9000_vectors = perform_moves_cratemover_9000(crate_vectors, moves_vector)
   top_crates = join(map(pop!, cratemover9000_vectors))
 
-  println(
-          "The top crates with CrateMover9000 are as follows: ",
-          top_crates
-         )
+  results = [top_crates]
 
   ###################
-  println("Part 2:")
-
   cratemover9001_vectors = perform_moves_cratemover_9001(crate_vectors, moves_vector)
   top_crates = join(map(pop!, cratemover9001_vectors))
 
-  println(
-          "The top crates with CrateMover9001 are as follows: ",
-          top_crates
-         )
-
+  push!(results, top_crates)
+  println("Day 5 Results - ",  results)
 end
 
 end

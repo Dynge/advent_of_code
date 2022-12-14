@@ -25,7 +25,7 @@ function load_monkeys()
 end
 
 mutable struct Monkey
-  items::Vector{BigInt}
+  items::Vector{Int}
   inspected::Int64
   operation_string::RegexMatch
   test_divide::Int8
@@ -40,13 +40,13 @@ end
 function monkey_shrink_item(lcm, item)
   if item > lcm
     remainder = item % lcm
-    return lcm + remainder
+    return remainder + lcm
   end
 
   return item
 end
 
-function monkey_operation(monkey, item)::BigInt
+function monkey_operation(monkey, item)::Int
   string = monkey.operation_string
   captures = string.captures
   if captures[1] == "*"
@@ -69,14 +69,32 @@ end
 
 
 function day11()
-  monkeys = load_monkeys()
 
+  monkeys = load_monkeys()
   least_common_multiple = 1
   for monkey in monkeys
     least_common_multiple *= monkey.test_divide
   end
 
-  for _ in 1:1:10000
+  for _ in 1:20
+    for monkey in monkeys
+      for item in monkey.items
+        item = floor(monkey_operation(monkey, item) / 3)
+        item = monkey_shrink_item(least_common_multiple, item)
+        monkey.inspected += 1
+        throw_to = monkey_test(monkey, item)
+        push!(monkeys[throw_to].items, item)
+      end
+      monkey.items = []
+    end
+  end
+
+  sorted_monkeys = sort([monkey.inspected for monkey in monkeys])[end-1:end]
+
+  results = [prod(sorted_monkeys)]
+
+  monkeys = load_monkeys()
+  for _ in 1:10000
     for monkey in monkeys
       for item in monkey.items
         item = monkey_operation(monkey, item)
@@ -90,9 +108,9 @@ function day11()
   end
 
   sorted_monkeys = sort([monkey.inspected for monkey in monkeys])[end-1:end]
-  println(sorted_monkeys)
 
-  println(prod(sorted_monkeys))
+  push!(results, prod(sorted_monkeys))
+  println("Day 11 Results - ", results)
 end
 
 

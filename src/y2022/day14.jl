@@ -8,19 +8,13 @@ export day14
   SAND
 end
 
-@enum Direction begin
-  UP
-  DOWN
-  LEFT
-  RIGHT
-end
-
 struct Line
-  start_x::Int
-  start_y::Int
-  direction::Direction
-  steps::Int
+  x0::Int
+  y0::Int
+  x1::Int
+  y1::Int
 end  
+
 
 function parse_input_to_matrix(location::String)
   data = open(readlines, location, "r")
@@ -30,97 +24,54 @@ function parse_input_to_matrix(location::String)
     for index in 1:length(positions)-1
       x0, y0 = map(x->parse(Int, x), split(positions[index], ","))
       x1, y1 = map(x->parse(Int, x), split(positions[index+1], ","))
-      diff = [x0-x1, y0-y1]
-      direction = DOWN::Direction
-      if diff[1] == 0
-        if diff[2] > 0
-          direction = UP::Direction
-        else
-          direction = DOWN::Direction
-        end
-      else
-        if diff[1] > 0
-          direction = LEFT::Direction
-        else
-          direction = RIGHT::Direction
-        end
-      end
-      push!(rock_lines, Line(x0+1, y0+1, direction, maximum(map(abs, diff))))
+      push!(rock_lines, Line(x0+1, y0+1, x1+1, y1+1))
     end
   end
   
   return rock_lines
 end
 
-function create_matrix(lines::Vector{Line})
-  max_x = 0
-  max_y = 0
+function draw_rocks!(matrix::Matrix{Space}, lines::Vector{Line}; floor_at = false)
   for line in lines
-    if line.start_x + line.steps > max_x
-      max_x = line.start_x + line.steps
-    end
-    if line.start_y + line.steps > max_y
-      max_y = line.start_y + line.steps
-    end
+    min_y = min(line.y0, line.y1)
+    min_x = min(line.x0, line.x1)
+    max_y = max(line.y0, line.y1)
+    max_x = max(line.x0, line.x1)
+    matrix[min_y:max_y, min_x:max_x] .= ROCK::Space
   end
 
-  return fill(AIR::Space, (max_x, max_y))
-end
-
-function draw_rocks!(matrix::Matrix{Space}, lines::Vector{Line})
-  for line in lines
-    if line.direction == UP::Direction
-      matrix[line.start_x, line.start_y-line.steps:line.start_y] .= ROCK::Space
-    elseif line.direction == DOWN::Direction
-      matrix[line.start_x, line.start_y:line.start_y+line.steps] .= ROCK::Space
-    elseif line.direction == LEFT::Direction
-      matrix[line.start_x-line.steps:line.start_x, line.start_y] .= ROCK::Space
-    elseif line.direction == RIGHT::Direction
-      matrix[line.start_x:line.steps+line.steps, line.start_y] .= ROCK::Space
-    end
+  if floor_at
+    matrix[end, 1:end] .= ROCK::Space
   end
 
   return matrix
 end
 
-function spawn_sand!(matrix::Matrix{Space})::CartesianIndex
-  spawn_sand_at = CartesianIndex(501, 1)
-  matrix[spawn_sand_at] = SAND::Space
-  return spawn_sand_at
+function spawn_sand!(matrix::Matrix{Space}; point = CartesianIndex(1, 501))::CartesianIndex
+  matrix[point] = SAND::Space
+  return point
 end
 
 function move_sand!(matrix::Matrix{Space}, sand_current_index::CartesianIndex)::CartesianIndex
-  down = CartesianIndex(0,1)
-  down_left = CartesianIndex(-1,1)
+  down = CartesianIndex(1,0)
+  down_left = CartesianIndex(1,-1)
   down_right = CartesianIndex(1,1)
   new_index = sand_current_index
-  println("Current: ", sand_current_index)
   try
-    println("Below: ",
-      matrix[sand_current_index+down_left],
-      " ", 
-      matrix[sand_current_index+down],
-      " ", 
-      matrix[sand_current_index+down_right],
-    )
     if matrix[sand_current_index+down] == AIR::Space
-      println("DOWN")
       matrix[sand_current_index+down] = SAND::Space
       matrix[sand_current_index] = AIR::Space
       new_index = sand_current_index + down
     elseif matrix[sand_current_index+down_left] == AIR::Space
-      println("DOWN_LEFT")
       matrix[sand_current_index+down_left] = SAND::Space
       matrix[sand_current_index] = AIR::Space
       new_index = sand_current_index+down_left
     elseif matrix[sand_current_index+down_right] == AIR::Space
-      println("DOWN_RIGHT")
       matrix[sand_current_index+down_right] = SAND::Space
       matrix[sand_current_index] = AIR::Space
       new_index = sand_current_index+down_right
     end
   catch
-    println("Current: ", sand_current_index)
     matrix[sand_current_index] = AIR::Space
     new_index = CartesianIndex(0, 0)
   end
@@ -132,32 +83,53 @@ end
 
 function day14()
   vector = parse_input_to_matrix("./2022/day14.txt")
-  mat = create_matrix(vector)
+  height = foldl((acc, line) -> max(acc, line.y0, line.y1), vector, init=0)
+  width = foldr((line, acc) -> max(acc, line.x0, line.x1), vector, init=0)
+  mat = fill(AIR::Space, (height, width))
   mat = draw_rocks!(mat, vector)
-  cur_sand_position = CartesianIndex(501,1)
-  prev_sand_position = CartesianIndex(501,1)
+  cur_sand_position = CartesianIndex(1, 501)
+  prev_sand_position = CartesianIndex(1, 501)
   sand_count = 0
   while true
     if cur_sand_position == CartesianIndex(0,0)
-      println("SAND AWAY!!!!!!!")
       sand_count -= 1
       break
     end
 
-    if (
-        cur_sand_position == prev_sand_position
-    )
-      println("NEW SAND COMING!!!!!!!")
+    if cur_sand_position == prev_sand_position
       cur_sand_position = spawn_sand!(mat)
       sand_count += 1
     end
     prev_sand_position = cur_sand_position
     cur_sand_position = move_sand!(mat, cur_sand_position)
-    println("Current Outside: ", cur_sand_position)
 
-    println(cur_sand_position)
   end
-  println("Sand count: ", sand_count)
+
+  results = [sand_count]
+
+
+  # Part 2
+  mat = fill(AIR::Space, (height + 2, width*2))
+  mat = draw_rocks!(mat, vector, floor_at=true)
+  cur_sand_position = CartesianIndex(0, 0)
+  prev_sand_position = CartesianIndex(0, 0)
+  sand_count = 0
+  while true
+    if cur_sand_position == CartesianIndex(1,501)
+      break
+    end
+
+    if cur_sand_position == prev_sand_position
+      cur_sand_position = spawn_sand!(mat)
+      sand_count += 1
+    end
+    prev_sand_position = cur_sand_position
+    cur_sand_position = move_sand!(mat, cur_sand_position)
+
+  end
+  push!(results, sand_count)
+
+  println("Day 14 Results - ", results)
 end
 
 end

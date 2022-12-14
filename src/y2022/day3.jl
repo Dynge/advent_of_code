@@ -34,10 +34,10 @@ function split_into_groups(rucksack_list::Vector{String}, group_size::Int=3)::Ve
 
   groups::Vector{Vector{String}} = []
   for index in range(
-                     start=1,
-                     stop=length(rucksack_list)-(group_size-1),
-                     step=group_size
-                    )
+    start=1,
+    stop=length(rucksack_list)-(group_size-1),
+    step=group_size
+  )
     push!(groups, rucksack_list[index:index+group_size-1])
   end
 
@@ -51,30 +51,11 @@ function day3()
   close(data)
 
   #########################
-  println("Part 1:")
-
-
-
-  print(
-        "The sum of priorities are: ",
-        sum(map(priority_of_duplicate_item, rucksack_list)),
-        "\n"
-       )
+  results = [sum(map(priority_of_duplicate_item, rucksack_list))]
 
   #########################
-  println("Part 2:")
-
-
-  print(
-        "The sum of group badge priorities are: ",
-        sum(
-            map(
-                priority_of_groups_badge,
-                split_into_groups(rucksack_list)
-               )
-           ),
-        "\n"
-       )
+  push!(results, sum(map(priority_of_groups_badge, split_into_groups(rucksack_list))))
+  println("Day 3 Results - ", results)
 end
 
 end

@@ -9,7 +9,6 @@ function day8()
   data = open(readlines, "./2022/day8.txt", "r");
 
   ###########
-  println("Part 1:")
   vec_of_vec = map(row -> [parse(Int8, c) for c in row], data)
   forest = reduce(vcat,transpose.(vec_of_vec))
 
@@ -24,20 +23,20 @@ function day8()
     end
   end
 
-  println(interior_seeable_count + 99 + 99 + 97 + 97)
+  results = [interior_seeable_count + 99 + 99 + 97 + 97]
 
   ############
-  println("Part 2:")
 
-  results::Vector{Int64} = [0]
+  scores::Vector{Int64} = [0]
   for row in axes(interior_forest, 1)
     for col in axes(interior_forest, 2)
       current_tree = interior_forest[row,col]
-      push!(results, scenic_score(current_tree, (row+1, col+1), forest))
+      push!(scores, scenic_score(current_tree, (row+1, col+1), forest))
     end
   end
 
-  println(maximum(results))
+  push!(results, maximum(scores))
+  println("Day 8 Results - ", results)
 
 end
 
@@ -93,7 +92,6 @@ function scenic_score(tree, position, forest)
     score *= length(right) + 1
   end
 
-  println(score)
 
   return score
 end

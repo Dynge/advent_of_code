@@ -83,46 +83,41 @@ function possible_start_positions(matrix::Matrix)::Vector{Int}
 end
 
 function day12_bfs()
-  println("Part 1: ")
   mat = load_matrix()
   (edges, start_index, end_index) = load_graph(mat)
   graph = Graphs.SimpleDiGraph(Graphs.Edge.(edges))
   solution = Graphs.bellman_ford_shortest_paths(graph, start_index)
   solution.dists[end_index]
-  println("Fewest steps from 'S' is: ", solution.dists[end_index])
+  results = [solution.dists[end_index]]
 
-  println("Part 2: ")
   start_pos = possible_start_positions(mat)
   solution = Graphs.bellman_ford_shortest_paths(graph, start_pos)
 
-  println("Minimum steps from any 'a' is: ", minimum(solution.dists[end_index]))
+  push!(results, minimum(solution.dists[end_index]))
+  println("Day 12 Results - ", results)
 end
 
 function day12_dijkstra()
-  println("Part 1: ")
   mat = load_matrix()
   (edges, start_index, end_index) = load_graph(mat)
   graph = Graphs.SimpleDiGraph(Graphs.Edge.(edges))
   solution = Graphs.dijkstra_shortest_paths(graph, start_index)
-  println("Fewest steps from 'S' is: ", solution.dists[end_index])
+  println("Part 1 -- ", solution.dists[end_index])
 
-  println("Part 2: ")
   start_pos = possible_start_positions(mat)
   solution = Graphs.dijkstra_shortest_paths(graph, start_pos)
 
-  println("Minimum steps from any 'a' is: ", minimum(solution.dists[end_index]))
+  println("Part 2 -- ", minimum(solution.dists[end_index]))
 end
 
 function day12_astar()
 
-  println("Part 1: ")
   mat = load_matrix()
   (edges, start_index, end_index) = load_graph(mat)
   graph = Graphs.SimpleDiGraph(Graphs.Edge.(edges))
   solution = Graphs.a_star(graph, start_index, end_index)
-  println("Fewest steps: ", length(solution))
+  println("Part 1 -- ", length(solution))
 
-  println("Part 2: ")
   solution_lenghts = []
   for start_pos in possible_start_positions(mat)
     solution = Graphs.a_star(graph, start_pos, end_index)
@@ -132,7 +127,7 @@ function day12_astar()
     push!(solution_lenghts, length(solution))
   end
 
-  println("Minimum steps from any 'a' is: ", minimum(solution_lenghts))
+  println("Part 2 -- ", minimum(solution_lenghts))
 end
 
 day12() = day12_bfs()

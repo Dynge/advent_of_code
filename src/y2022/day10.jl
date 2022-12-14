@@ -50,10 +50,7 @@ function day10()
   end
 
 
-  println(sum(result))
-  println(ascii)
-
-  
+  println("Day 10 Results - ", [sum(result)], "\n", ascii)
 end
 
 end
