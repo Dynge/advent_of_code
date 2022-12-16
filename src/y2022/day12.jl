@@ -47,12 +47,9 @@ function get_edges_to(index::CartesianIndex, mat)::Vector{Tuple{Int, Int}}
   index_height = get_height(mat[index])
   index_edges_to::Vector{Tuple{Int, Int}} = []
   for neighbor in [ 
-    CartesianIndex(-1, 0), CartesianIndex(1, 0), CartesianIndex(0, -1), CartesianIndex(0, 1), 
+    CartesianIndex(-1, 0), CartesianIndex(1, 0),
+    CartesianIndex(0, -1), CartesianIndex(0, 1), 
   ]
-    if all(neighbor.I .== 0)
-      continue
-    end
-
     neighbor_index = index + neighbor
     if (
       any(neighbor_index.I .== 0) ||
