@@ -1,7 +1,4 @@
-use std::{fs, collections::HashSet};
-
-use ndarray::arr2;
-
+use std::fs;
 
 pub fn day17() -> [i32; 2]{
 
@@ -37,31 +34,12 @@ pub fn day17() -> [i32; 2]{
 
     let mut movement_iter = data.chars().enumerate().cycle().peekable();
     let mut current_structure_index = 0;
-    let loop_count: u64 = 1_000_000_000_000;
-    let mut cache = HashSet::<(usize, Vec<i32>, usize)>::new();
+    const LOOP_COUNT: u64 = 2022;
     let mut structure_count = 0;
-    while structure_count < loop_count {
+    while structure_count < LOOP_COUNT {
         let mut structure = structures[current_structure_index].clone();
 
         let mut falling_down: bool = true;
-
-        if tower.len() > 20 {
-            let (_, tower_cache) = tower.split_at(tower.len()-20);
-            let (direction_index, _) = movement_iter.peek().unwrap().clone();
-            // println!("tower cache {:?}", tower_cache);
-            let new_cache = cache.insert((current_structure_index, tower_cache.to_vec(), direction_index));
-            if new_cache == false  {
-                println!("Wow a loop");
-                // Loop
-                let remaining_loops = loop_count / structure_count;
-                // TODO: Calculate height instead of making a stupidly large vector
-                // tower = tower.repeat(remaining_loops as usize);
-                structure_count = loop_count - (loop_count - structure_count * remaining_loops);
-                cache = HashSet::new();
-                println!("{} a loop", structure_count);
-            }
-        }
-        println!("count {}", structure_count);
 
         let mut structure_lowest_index: usize = tower.len().clone() + 3;
         while falling_down {
