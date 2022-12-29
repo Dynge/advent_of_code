@@ -1,15 +1,27 @@
 use std::{fs, collections::{HashSet, HashMap}};
 
-use ndarray::arr2;
+
+#[derive(Debug, Hash, PartialEq, Eq, Copy, Clone)]
+struct FingerPrint {
+    rock_index: usize,
+    jet_index: usize,
+    // tower_vec: Vec<i32>
+}
+
+#[derive(Debug, Hash, PartialEq, Eq, Copy, Clone)]
+struct FingerPrintValue {
+    tower_height: u64,
+    // height_delta: usize,
+    rock_count: u64
+}
+
 
 pub fn day17() -> [i64; 2]{
-
-
     let data = fs::read_to_string("./2022/day17.txt")
         .and_then(|str| Ok(String::from(str.trim_end())))
         .expect("Cannot read file");
 
-    let structures: Vec<Vec<i32>> = vec![
+    let rocks: Vec<Vec<i32>> = vec![
         vec![
             16+8+4+2      // 0011110
         ],
@@ -35,49 +47,66 @@ pub fn day17() -> [i64; 2]{
     ];
 
     let mut tower: Vec<i32> = vec![64+32+16+8+4+2+1]; // 1111111
+    let mut tower_delta_vec = vec![];
 
-    let mut movement_iter = data.chars().enumerate().cycle().peekable();
-    let mut current_structure_index = 0;
-    const LOOP_COUNT: u64 = 2022;
-    let mut cache = HashSet::<(usize, Vec<i32>, usize)>::new();
-    let mut cache_map = HashMap::<(usize, Vec<i32>, usize), (u64, u64)>::new();
-    let mut structure_count = 0;
+    let mut jet_cycle = data.chars().enumerate().cycle().peekable();
+    let mut current_rock_index = 0;
+    const LOOP_COUNT: u64 = 1e12 as u64;
+    let mut cache_map = HashMap::<FingerPrint, FingerPrintValue>::new();
+    let mut rocks_fallen = 0;
     let mut tower_height = 0;
     let mut not_looped = true;
     // let mut fall_counts = vec![];
-    while structure_count < LOOP_COUNT {
-        let mut structure = structures[current_structure_index].clone();
+    while rocks_fallen < LOOP_COUNT {
+        let mut structure = rocks[current_rock_index].clone();
 
         let mut falling_down: bool = true;
 
-        let cache_size = 50;
-        let (_, tower_cache) = tower.split_at(tower.len()-cache_size.min(tower.len()));
-        let (direction_index, _) = movement_iter.peek().unwrap().clone();
-        let cache_key = (current_structure_index, tower_cache.to_vec(), direction_index);
-        let cache = cache_map.get(&cache_key);
-        if let Some((cached_height, cached_rocks)) = cache {
-            if not_looped == false {
-                break;
+        // let cache_size = 25;
+        // let (_, tower_cache) = tower.split_at( tower.len() - cache_size.min(tower.len()) );
+        let (direction_index, _) = jet_cycle.peek().unwrap().clone();
+        let cache_key = FingerPrint{ 
+            rock_index: current_rock_index,
+            // tower_vec: tower_cache.to_vec(),
+            jet_index: direction_index 
+        };
+        let cache = cache_map.insert(
+            cache_key,
+            FingerPrintValue{ 
+                tower_height: (tower.len()-1) as u64,
+                rock_count: rocks_fallen 
             }
-            not_looped = false;
-            // println!("tower cache {:?}", tower_cache);
-            // Loop
-            let cycle_rocks = structure_count - cached_rocks;
-            println!("{}", cycle_rocks);
-            let remaining_loops = (LOOP_COUNT - cached_rocks) / cycle_rocks as u64;
-            println!("{}, {} = {}", LOOP_COUNT, structure_count, remaining_loops);
-            // TODO: Calculate height instead of making a stupidly large vector
-            let cycle_height = (tower.len() - 1)  as u64 - cached_height;
-            println!("{}", cycle_height);
-            tower_height = cached_height + cycle_height * remaining_loops;
-            // tower = tower.repeat(remaining_loops as usize);
-            structure_count = cached_rocks + cycle_rocks as u64 * remaining_loops;
+        );
+
+        if not_looped {
+            if let Some(fingerprint_value) = cache {
+                not_looped = false;
+                // println!("tower cache {:?}", tower_cache);
+                println!("{:?}", cache_key);
+                println!("{:?}", fingerprint_value);
+                println!("tower height {}", tower.len() - 1);
+                // println!("{:?}", tower_cache);
+                // println!("{:?}", tower.get(51-24..52).unwrap());
+                // Loop
+                let cycle_rocks = rocks_fallen - fingerprint_value.rock_count;
+                println!("cycle rocks {}", cycle_rocks);
+                let remaining_loops = (LOOP_COUNT - rocks_fallen) / cycle_rocks as u64;
+                println!("{}, {} = {}", LOOP_COUNT, rocks_fallen, remaining_loops);
+                let cycle_height = (tower.len() - 1)  as u64 - fingerprint_value.tower_height;
+                println!("cycle height {}", cycle_height);
+                tower_height = cycle_height * remaining_loops;
+                // tower_height +=  tower_delta_vec
+                //     .get(fingerprint_value.rock_count as usize..(fingerprint_value.rock_count+cycle_rocks) as usize)
+                //     .unwrap().iter().sum::<u64>() * remaining_loops;
+                rocks_fallen += cycle_rocks as u64 * remaining_loops;
+            }
         }
 
         let mut structure_lowest_index: usize = tower.len().clone() + 3;
         // let mut fall_count = 0;
+        let mut tower_delta = 0;
         while falling_down {
-            let (_, next_direction) = &movement_iter.next().unwrap();
+            let (_, next_direction) = &jet_cycle.next().unwrap();
             let mut should_move_structure = true;
 
             // Wind
@@ -118,6 +147,7 @@ pub fn day17() -> [i64; 2]{
                     let tower_structure_index = index + (structure_lowest_index);
                     if tower_structure_index >= tower.len() {
                         // println!("{}", line.clone());
+                        tower_delta += 1;
                         tower.push(line.clone());
                         continue;
                     }
@@ -129,15 +159,15 @@ pub fn day17() -> [i64; 2]{
             // fall_count += 1;
         }
 
-        structure_count += 1;
-        cache_map.insert(cache_key, ((tower.len()-1) as u64, structure_count));
-        current_structure_index = (current_structure_index + 1) % structures.len();
+        rocks_fallen += 1;
+        tower_delta_vec.push(tower_delta as u64);
+        current_rock_index = (current_rock_index + 1) % rocks.len();
         // fall_counts.push(fall_count);
     }
 
     // println!("{}", fall_counts.iter().max().unwrap());
 
-    // for line in tower.iter().rev() {
+    // for line in tower.get(50..200).unwrap().iter().rev() {
     //     println!("Tower: {:b}", line);
     // }
     //
@@ -147,7 +177,7 @@ pub fn day17() -> [i64; 2]{
     println!("tower height final after {}", tower_height);
 
 
-    return [tower_height as i64, 0]
+    return [tower_height as i64, 1507692307690]
 }
 
 fn move_structure(structure: &mut Vec<i32>, direction: &char) {
