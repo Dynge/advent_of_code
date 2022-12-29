@@ -20,6 +20,6 @@ fn main() {
     // println!("Day 9 Results - {:?}", day9());
     // println!("Day 13 Results - {:?}", day13());
     // println!("Day 16 Results - {:?}", day16());
-    println!("Day 17 Results - {:?}", day17());
-    // println!("Day 18 Results - {:?}", day18());
+    // println!("Day 17 Results - {:?}", day17());
+    println!("Day 18 Results - {:?}", day18());
 }
