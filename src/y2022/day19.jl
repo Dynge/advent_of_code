@@ -154,7 +154,7 @@ function day19()
     end
   end
 
-  results
+  max_geode_fact
 end
 
 end
