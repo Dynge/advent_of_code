@@ -13,7 +13,6 @@ pub fn day9() -> Vec<i32> {
 
     let commands = move_lines.map(|line| line.split(" ").collect::<Vec<&str>>()).collect::<Vec<Vec<&str>>>();
 
-
     let mut two_knot_rope: Vec<Array1<i32>> = vec![
         array![0,0], array![0,0]
     ];
