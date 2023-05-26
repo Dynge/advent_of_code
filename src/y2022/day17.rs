@@ -1,5 +1,5 @@
-use std::{fs, collections::{HashSet, HashMap}};
-
+use std::collections::HashMap;
+use std::fs;
 
 #[derive(Debug, Hash, PartialEq, Eq, Copy, Clone)]
 struct FingerPrint {
@@ -12,41 +12,41 @@ struct FingerPrint {
 struct FingerPrintValue {
     tower_height: u64,
     // height_delta: usize,
-    rock_count: u64
+    rock_count: u64,
 }
 
-
-pub fn day17() -> [i64; 2]{
+pub fn day17() -> [i64; 2] {
     let data = fs::read_to_string("./2022/day17.txt")
         .and_then(|str| Ok(String::from(str.trim_end())))
         .expect("Cannot read file");
 
     let rocks: Vec<Vec<i32>> = vec![
         vec![
-            16+8+4+2      // 0011110
+            16 + 8 + 4 + 2, // 0011110
         ],
         vec![
-               8,         // 0001000
-            16+8+4,       // 0011100
-               8,         // 0001000
-        ], vec![
-                 4,       // 0000100
-                 4,       // 0000100
-            16+8+4,       // 0011100
+            8,          // 0001000
+            16 + 8 + 4, // 0011100
+            8,          // 0001000
         ],
         vec![
-            16,           // 0010000
-            16,           // 0010000
-            16,           // 0010000
-            16,           // 0010000
-        ], 
+            4,          // 0000100
+            4,          // 0000100
+            16 + 8 + 4, // 0011100
+        ],
         vec![
-            16+8,         // 0011000
-            16+8,         // 0011000
+            16, // 0010000
+            16, // 0010000
+            16, // 0010000
+            16, // 0010000
+        ],
+        vec![
+            16 + 8, // 0011000
+            16 + 8, // 0011000
         ],
     ];
 
-    let mut tower: Vec<i32> = vec![64+32+16+8+4+2+1]; // 1111111
+    let mut tower: Vec<i32> = vec![64 + 32 + 16 + 8 + 4 + 2 + 1]; // 1111111
     let mut tower_delta_vec = vec![];
 
     let mut jet_cycle = data.chars().enumerate().cycle().peekable();
@@ -65,17 +65,17 @@ pub fn day17() -> [i64; 2]{
         // let cache_size = 25;
         // let (_, tower_cache) = tower.split_at( tower.len() - cache_size.min(tower.len()) );
         let (direction_index, _) = jet_cycle.peek().unwrap().clone();
-        let cache_key = FingerPrint{ 
+        let cache_key = FingerPrint {
             rock_index: current_rock_index,
             // tower_vec: tower_cache.to_vec(),
-            jet_index: direction_index 
+            jet_index: direction_index,
         };
         let cache = cache_map.insert(
             cache_key,
-            FingerPrintValue{ 
-                tower_height: (tower.len()-1) as u64,
-                rock_count: rocks_fallen 
-            }
+            FingerPrintValue {
+                tower_height: (tower.len() - 1) as u64,
+                rock_count: rocks_fallen,
+            },
         );
 
         if not_looped {
@@ -92,7 +92,7 @@ pub fn day17() -> [i64; 2]{
                 println!("cycle rocks {}", cycle_rocks);
                 let remaining_loops = (LOOP_COUNT - rocks_fallen) / cycle_rocks as u64;
                 println!("{}, {} = {}", LOOP_COUNT, rocks_fallen, remaining_loops);
-                let cycle_height = (tower.len() - 1)  as u64 - fingerprint_value.tower_height;
+                let cycle_height = (tower.len() - 1) as u64 - fingerprint_value.tower_height;
                 println!("cycle height {}", cycle_height);
                 tower_height = cycle_height * remaining_loops;
                 // tower_height +=  tower_delta_vec
@@ -123,14 +123,13 @@ pub fn day17() -> [i64; 2]{
                 move_structure(&mut structure, next_direction)
             }
             // for line in structure.iter() {
-                // println!("Structure: {:b}", line);
+            // println!("Structure: {:b}", line);
             // }
-
 
             // Fall down
             should_move_structure = true;
             for (index, line) in structure.iter().rev().enumerate() {
-                let tower_structure_index = index + (structure_lowest_index-1);
+                let tower_structure_index = index + (structure_lowest_index - 1);
                 if tower_structure_index >= tower.len() {
                     continue;
                 }
@@ -176,8 +175,7 @@ pub fn day17() -> [i64; 2]{
     tower_height += (tower.len() - 1) as u64;
     println!("tower height final after {}", tower_height);
 
-
-    return [tower_height as i64, 1507692307690]
+    return [tower_height as i64, 1507692307690];
 }
 
 fn move_structure(structure: &mut Vec<i32>, direction: &char) {
@@ -189,7 +187,7 @@ fn move_structure(structure: &mut Vec<i32>, direction: &char) {
                     *line = *line >> 1;
                 }
             }
-        },
+        }
         &'<' => {
             if structure.clone().iter().all(|line| line.clone() < 64) {
                 // Does not touch left side
@@ -197,7 +195,7 @@ fn move_structure(structure: &mut Vec<i32>, direction: &char) {
                     *line = *line << 1;
                 }
             }
-        },
+        }
         _ => panic!("Cannot move by this direction {}", direction),
     }
 }
@@ -207,19 +205,22 @@ fn cannot_move_structure(structure_line: &i32, tower_line: &i32, direction: &cha
         &'>' => {
             if structure_line >> 1 & tower_line == 0i32 {
                 return false;
-            } 
-        },
+            }
+        }
         &'<' => {
             if structure_line << 1 & tower_line == 0i32 {
                 return false;
-            } 
-        },
+            }
+        }
         &'v' => {
             if structure_line & tower_line == 0i32 {
                 return false;
-            } 
+            }
         }
-        _ => panic!("Dont know how to check a move by this direction {}", direction),
+        _ => panic!(
+            "Dont know how to check a move by this direction {}",
+            direction
+        ),
     }
     return true;
 }

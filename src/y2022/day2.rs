@@ -10,12 +10,12 @@ pub fn day2() -> [i32; 2] {
 
 fn p1() -> i32 {
     let strategy = HashMap::from([
-        ("X", 1), //rock
-        ("Y", 2), //paper
-        ("Z", 3), //scissor
-        ("A", 1), //rock
-        ("B", 2), //paper
-        ("C", 3), //scissor
+        ("X", 1), // rock
+        ("Y", 2), // paper
+        ("Z", 3), // scissor
+        ("A", 1), // rock
+        ("B", 2), // paper
+        ("C", 3), // scissor
     ]);
 
     let data = load_data();
@@ -37,12 +37,12 @@ fn p1() -> i32 {
 
 fn p2() -> i32 {
     let strategy = HashMap::from([
-        ("X", 0), //loss
-        ("Y", 3), //draw
-        ("Z", 6), //win
-        ("A", 1), //rock
-        ("B", 2), //paper
-        ("C", 3), //scissor
+        ("X", 0), // loss
+        ("Y", 3), // draw
+        ("Z", 6), // win
+        ("A", 1), // rock
+        ("B", 2), // paper
+        ("C", 3), // scissor
     ]);
 
     let data = load_data();
