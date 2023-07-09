@@ -33,3 +33,6 @@ session_cookie.txt
 
 # Dont commit data
 2022/*.txt
+
+_build/
+_opam/
