@@ -1,0 +1,4 @@
+(executables
+ (public_names Advent)
+ (names main)
+ (libraries advent str base unix))
