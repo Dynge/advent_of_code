@@ -36,3 +36,4 @@ session_cookie.txt
 
 _build/
 _opam/
+!lib/
