@@ -18,7 +18,7 @@ module RPS = struct
   let score t = match t with Rock -> 1 | Paper -> 2 | Scissor -> 3
 end
 
-type stategy = Rps | Outcome
+type strategy = Rps | Outcome
 
 module Game = struct
   type t = Played of RPS.t * RPS.t
@@ -41,11 +41,11 @@ module Game = struct
         0 + RPS.score ours (* Loss *)
     | _, _ -> 3 + RPS.score ours (* Draw *)
 
-  let rec total_score part strategy_guide init_score =
+  let rec total_score strategy strategy_guide init_score =
     match strategy_guide with
     | [] -> init_score
     | head :: tail ->
-        total_score part tail (init_score + score (of_string part head))
+        total_score strategy tail (init_score + score (of_string strategy head))
 end
 
 let strategy_guide = Advent.read_lines "../2022/day2.txt"
