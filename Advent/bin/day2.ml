@@ -30,8 +30,6 @@ module Game = struct
       Played
         (RPS.of_string theirs, RPS.from_strategy ours (RPS.of_string theirs))
 
-  (* Part 1 *)
-
   let score played =
     let (Played (theirs, ours)) = played in
     match (theirs, ours) with
