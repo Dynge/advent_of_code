@@ -32,4 +32,4 @@ let sum ints = List.fold_left ( + ) 0 ints
 
 let _ =
   List.map (index_of_signal ~min_unique:4) signals
-  |> sum 0 |> Format.printf "Part 1: %d"
+  |> sum |> Format.printf "Part 1: %d"
