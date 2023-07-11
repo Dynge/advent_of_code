@@ -27,8 +27,8 @@ let index_of_signal signal ~min_unique =
   let chars = String.to_seq signal |> List.of_seq in
   inner chars min_unique min_unique
 
-let rec sum acc ints =
-  match ints with [] -> acc | hd :: tl -> sum (hd + acc) tl
+let sum ints = List.fold_left ( + ) 0 ints
+ 
 
 let _ =
   List.map (index_of_signal ~min_unique:4) signals
