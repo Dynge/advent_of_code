@@ -32,7 +32,7 @@ session_cookie.txt
 /target
 
 # Dont commit data
-2022/*.txt
+day*.txt
 
 _build/
 _opam/
