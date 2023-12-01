@@ -1,0 +1,4 @@
+(executable
+ (public_name elf_caml)
+ (name main)
+ (libraries elf_caml))

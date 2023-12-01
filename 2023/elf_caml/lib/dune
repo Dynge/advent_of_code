@@ -1,0 +1,3 @@
+(library
+ (name elf_caml)
+ (libraries "str" "core"))
