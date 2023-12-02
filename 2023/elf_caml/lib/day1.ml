@@ -22,4 +22,4 @@ let read_calibration line =
 let solution () =
   let calibrations = List.map read_calibration lines in
   let calibration_sum = List.fold_left ( + ) 0 calibrations in
-  Format.printf "Day1 Part 1: %d" calibration_sum
+  Format.printf "Day1 Part 1: %d\n" calibration_sum
