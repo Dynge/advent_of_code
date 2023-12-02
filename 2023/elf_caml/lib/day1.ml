@@ -56,12 +56,12 @@ let combine_nums num_left num_right =
   in
   aux num_left num_right []
 
-let word_patterns =
-  [ "one"; "two"; "three"; "four"; "five"; "six"; "seven"; "eight"; "nine" ]
-
-let num_patterns = [ "1"; "2"; "3"; "4"; "5"; "6"; "7"; "8"; "9" ]
-
 let solution () =
+  let word_patterns =
+    [ "one"; "two"; "three"; "four"; "five"; "six"; "seven"; "eight"; "nine" ]
+  in
+  let num_patterns = [ "1"; "2"; "3"; "4"; "5"; "6"; "7"; "8"; "9" ] in
+
   let lines = read_lines "../data/day1.txt" in
 
   let first_matches = List.map (find_first num_patterns) lines in
