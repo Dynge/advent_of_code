@@ -9,28 +9,58 @@ let split_once ch str =
   (left, right)
 
 (* stream *)
+type cursor = { row_num : int; col_num : int }
+
 type stream = {
   mutable chr : char option;
-  mutable line_num : int;
+  mutable cursor : cursor;
+  mutable prev_cursor : cursor option;
   chan : in_channel;
 }
 
-let open_stream file = { chr = None; line_num = 1; chan = open_in file }
+let open_stream file =
+  {
+    chr = None;
+    cursor = { row_num = 0; col_num = -1 };
+    prev_cursor = None;
+    chan = open_in file;
+  }
+
 let close_stream stm = close_in stm.chan
+
+let advance_cursor stm c =
+  let _ = stm.prev_cursor <- Some stm.cursor in
+  match c with
+  | None -> ()
+  | Some '\n' ->
+      let next_cursor = { row_num = stm.cursor.row_num + 1; col_num = -1 } in
+      let _ = stm.cursor <- next_cursor in
+      ()
+  | Some _ ->
+      let next_cursor = { stm.cursor with col_num = stm.cursor.col_num + 1 } in
+      let _ = stm.cursor <- next_cursor in
+      ()
 
 let read_char stm =
   match stm.chr with
   | None ->
       let c = input_char stm.chan in
-      if c = Some '\n' then
-        let _ = stm.line_num <- stm.line_num + 1 in
+      if c = None then c
+      else
+        let () = advance_cursor stm c in
         c
-      else c
   | Some c ->
-      stm.chr <- None;
+      let _ = stm.chr <- None in
+      let () = advance_cursor stm (Some c) in
       Some c
 
-let unread_char stm c = stm.chr <- Some c
+let unread_char stm c =
+  let _ = stm.chr <- Some c in
+  match stm.prev_cursor with
+  | None -> ()
+  | Some prev ->
+      let _ = stm.cursor <- prev in
+      stm.prev_cursor <- None
 
 (* character *)
 let is_digit c =
@@ -43,3 +73,22 @@ let is_alpha c =
   || (code >= Char.code 'a' && code <= Char.code 'z')
 
 let is_whitespace c = c = '\t' || c = ' '
+let string_of_chars chars = List.rev chars |> List.to_seq |> String.of_seq
+
+let rec read_alpha stream acc =
+  let next_char = read_char stream in
+  match next_char with
+  | None -> string_of_chars acc
+  | Some c when not (is_alpha c) ->
+      let () = unread_char stream c in
+      string_of_chars acc
+  | Some c -> read_alpha stream (c :: acc)
+
+let rec read_digit stream acc =
+  let next_char = read_char stream in
+  match next_char with
+  | None -> string_of_chars acc
+  | Some c when not (is_digit c) ->
+      let () = unread_char stream c in
+      string_of_chars acc
+  | Some c -> read_digit stream (c :: acc)
