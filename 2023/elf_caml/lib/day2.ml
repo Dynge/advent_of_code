@@ -28,25 +28,6 @@ let color_of int = function
   | B -> Blue int
   | _ -> failwith "illegal color token"
 
-let string_of_chars chars = List.rev chars |> List.to_seq |> String.of_seq
-
-let rec read_alpha stream acc =
-  let next_char = read_char stream in
-  match next_char with
-  | None -> string_of_chars acc
-  | Some c when not (is_alpha c) ->
-      let () = unread_char stream c in
-      string_of_chars acc
-  | Some c -> read_alpha stream (c :: acc)
-
-let rec read_digit stream acc =
-  let next_char = read_char stream in
-  match next_char with
-  | None -> string_of_chars acc
-  | Some c when not (is_digit c) ->
-      let () = unread_char stream c in
-      string_of_chars acc
-  | Some c -> read_digit stream (c :: acc)
 
 let rec next_token stream =
   let next_char = read_char stream in
@@ -93,7 +74,7 @@ let parse_color stream prev_token =
     | Int _ -> aux stream t (Red 0)
     | (R | G | B) as cl -> (
         match prev_token with
-        | Int d -> aux stream t (color_of d cl)
+        | Int d -> aux stream cl (color_of d cl)
         | _ -> failwith "illegal syntax of color")
     | _ -> failwith "illegal syntax of color"
   in
@@ -193,8 +174,8 @@ let solution () =
   let id_sum =
     List.fold_left (fun acc game -> acc + game.id) 0 possible_games
   in
-  let () = Format.printf "Day2 Part 1: %d\n" id_sum in
+  let () = Format.printf "Day02 Part 1: %d\n" id_sum in
 
   let high_draws = calculate_mins games in
   let p_sum = power_sum high_draws in
-  Format.printf "Day2 Part 2: %d\n" p_sum
+  Format.printf "Day02 Part 2: %d\n" p_sum

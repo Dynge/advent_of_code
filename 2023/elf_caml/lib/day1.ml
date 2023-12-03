@@ -69,7 +69,7 @@ let solution () =
   let part1_sum =
     List.fold_left ( + ) 0 (combine_nums first_matches last_matches)
   in
-  let () = Format.printf "Day1 Part 1: %d\n" part1_sum in
+  let () = Format.printf "Day01 Part 1: %d\n" part1_sum in
 
   let first_matches =
     List.map (find_first (num_patterns @ word_patterns)) lines
@@ -80,4 +80,4 @@ let solution () =
   let part2_sum =
     List.fold_left ( + ) 0 (combine_nums first_matches last_matches)
   in
-  Format.printf "Day1 Part 2: %d\n" part2_sum
+  Format.printf "Day01 Part 2: %d\n" part2_sum
