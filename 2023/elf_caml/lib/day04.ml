@@ -107,18 +107,30 @@ module CardGame = struct
     to_map_aux map cards
 
   let play_card_game cards =
+    let rec push_to_map multiplier winner_map = function
+      | [] -> ()
+      | hd :: tl ->
+          let card_count =
+            match Hashtbl.find_opt winner_map hd.id with
+            | None -> 1
+            | Some card_count -> card_count
+          in
+          let _ =
+            Hashtbl.add winner_map hd.id (card_count + (1 * multiplier))
+          in
+          push_to_map multiplier winner_map tl
+    in
     let rec play_aux count map winner_map = function
       | [] -> count - 1
       | hd :: tl ->
-          let won_cards =
+          let multiplier =
             match Hashtbl.find_opt winner_map hd.id with
-            | None ->
-                let winner_cards = get_winner_cards map hd in
-                let _ = Hashtbl.add winner_map hd.id winner_cards in
-                winner_cards
-            | Some winner_cards -> winner_cards
+            | None -> 1
+            | Some x -> x
           in
-          play_aux (count + 1) map winner_map (won_cards @ tl)
+          let winner_cards = get_winner_cards map hd in
+          let () = push_to_map multiplier winner_map winner_cards in
+          play_aux (count + (1 * multiplier)) map winner_map tl
     in
 
     let card_map = to_map cards in
