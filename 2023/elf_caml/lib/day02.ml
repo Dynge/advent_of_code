@@ -166,7 +166,7 @@ let power_sum high_draws =
   List.fold_left ( + ) 0 powers
 
 let solution () =
-  let stream = open_stream "../data/day2.txt" in
+  let stream = open_stream "day2.txt" in
   let games = parse stream [] in
   let possible_games = List.filter possible_game games in
 

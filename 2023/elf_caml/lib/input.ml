@@ -2,7 +2,9 @@ open Str
 open String
 open In_channel
 
-let read_lines file = with_open_text file input_all |> split (regexp "\n")
+let read_lines file =
+  let file = Unix.getenv "HOME" ^ "/git/advent_of_code/2023/data/" ^ file in
+  with_open_text file input_all |> split (regexp "\n")
 
 let split_once ch str =
   let[@ocaml.warning "-8"] [ left; right ] = split_on_char ch str in
@@ -19,6 +21,7 @@ type stream = {
 }
 
 let open_stream file =
+  let file = Unix.getenv "HOME" ^ "/git/advent_of_code/2023/data/" ^ file in
   {
     chr = None;
     cursor = { row_num = 0; col_num = -1 };

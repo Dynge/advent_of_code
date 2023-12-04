@@ -146,7 +146,7 @@ end
 
 let solution () =
   let open Graph in
-  let stream = open_stream "../data/day3.txt" in
+  let stream = open_stream "day3.txt" in
   let nodes = Parser.parse stream in
   let graph = to_map nodes in
   let number_nodes =

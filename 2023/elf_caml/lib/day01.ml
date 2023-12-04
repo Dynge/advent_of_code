@@ -62,7 +62,7 @@ let solution () =
   in
   let num_patterns = [ "1"; "2"; "3"; "4"; "5"; "6"; "7"; "8"; "9" ] in
 
-  let lines = read_lines "../data/day1.txt" in
+  let lines = read_lines "day1.txt" in
 
   let first_matches = List.map (find_first num_patterns) lines in
   let last_matches = List.map (find_last num_patterns) lines in
