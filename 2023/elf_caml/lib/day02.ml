@@ -31,7 +31,9 @@ let color_of int = function
 let rec next_token stream =
   let next_char = read_char stream in
   match next_char with
-  | None -> EOF
+  | None ->
+      let () = close_stream stream in
+      EOF
   | Some ',' -> Comma
   | Some ';' -> Semicolon
   | Some ':' -> Colon

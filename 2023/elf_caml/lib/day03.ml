@@ -74,8 +74,7 @@ module Graph = struct
       | hd :: tl -> (
           let edge_node = Hashtbl.find_opt map hd in
           match edge_node with
-          | None ->
-              aux map count tl
+          | None -> aux map count tl
           | Some edge_node -> (
               if exist edge_node.id count then aux map count tl
               else
@@ -104,7 +103,9 @@ module Parser = struct
 
   let rec next_node stream =
     match read_char stream with
-    | None -> None
+    | None ->
+        let () = close_stream stream in
+        None
     | Some '\n' | Some '.' -> next_node stream
     | Some c ->
         let start_coordinate =

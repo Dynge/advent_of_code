@@ -5,7 +5,9 @@ module Parser = struct
 
   let rec next_token stm =
     match read_char stm with
-    | None -> EOF
+    | None ->
+        let () = close_stream stm in
+        EOF
     | Some ':' -> Colon
     | Some '|' -> Pipe
     | Some '\n' -> Newline
@@ -20,11 +22,12 @@ module Parser = struct
           | x -> failwith ("invalid word in data: " ^ x))
 
   let parse stm =
-    let rec parse_aux acc = function
+    let rec parse_aux acc stm =
+      match next_token stm with
       | EOF -> EOF :: acc
-      | token -> parse_aux (token :: acc) (next_token stm)
+      | token -> parse_aux (token :: acc) stm
     in
-    parse_aux [] (next_token stm) |> List.rev
+    parse_aux [] stm |> List.rev
 end
 
 module CardGame = struct
@@ -79,7 +82,6 @@ module CardGame = struct
     score_aux 0 win_count
 
   let get_winner_cards map card =
-    let win_count = winner_count card in
     let rec get_winners_aux map id acc = function
       | 0 -> acc
       | x -> (
@@ -89,20 +91,22 @@ module CardGame = struct
           | None -> failwith "cannot find id in map"
           | Some next_card -> get_winners_aux map id (next_card :: acc) next_x)
     in
+
+    let win_count = winner_count card in
     get_winners_aux map card.id [] win_count
 
   let to_map cards =
-    let map = Hashtbl.create (List.length cards) in
     let rec to_map_aux map = function
       | [] -> map
       | hd :: tl ->
           let _ = Hashtbl.add map hd.id hd in
           to_map_aux map tl
     in
+
+    let map = Hashtbl.create (List.length cards) in
     to_map_aux map cards
 
-  let play_card_game map cards =
-    let winner_map = Hashtbl.create (List.length cards) in
+  let play_card_game cards =
     let rec play_aux count map winner_map = function
       | [] -> count - 1
       | hd :: tl ->
@@ -116,7 +120,10 @@ module CardGame = struct
           in
           play_aux (count + 1) map winner_map (won_cards @ tl)
     in
-    play_aux 0 map winner_map cards
+
+    let card_map = to_map cards in
+    let winner_map = Hashtbl.create (List.length cards) in
+    play_aux 0 card_map winner_map cards
 end
 
 let solution () =
@@ -128,7 +135,6 @@ let solution () =
 
   let () = Format.printf "Day04 Part 1: %d\n" total_score in
 
-  let card_map = CardGame.to_map cards in
-  let card_count = CardGame.play_card_game card_map cards in
+  let card_count = CardGame.play_card_game cards in
   let () = Format.printf "Day04 Part 2: %d\n" card_count in
   ()
