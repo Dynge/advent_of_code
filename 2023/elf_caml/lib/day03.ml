@@ -84,8 +84,8 @@ module Graph = struct
             | Symbol _ -> gear_ratio_aux map adjacent_numbers rest
             | Number _ -> add_edge_number map edge_node adjacent_numbers rest)
     and add_edge_number map edge_node adjacent_numbers rest =
-      let count = edge_node :: adjacent_numbers in
-      if List.length count >= 2 then
+      let adjacents = edge_node :: adjacent_numbers in
+      if List.length adjacents >= 2 then
         List.fold_left
           (fun acc node ->
             let value_int =
@@ -94,8 +94,8 @@ module Graph = struct
               | _ -> failwith "node is not a number..."
             in
             int_of_string value_int * acc)
-          1 count
-      else gear_ratio_aux map count rest
+          1 adjacents
+      else gear_ratio_aux map adjacents rest
     in
     let gear_ratio = gear_ratio_aux map [] node.edges in
     gear_ratio
