@@ -69,32 +69,35 @@ module Graph = struct
     match nodes with [] -> false | hd :: tl -> id = hd.id || exist id tl
 
   let gear_ratio map node =
-    let rec aux map count = function
+    let rec gear_ratio_aux map adjacent_numbers = function
       | [] -> 0
-      | hd :: tl -> (
-          let edge_node = Hashtbl.find_opt map hd in
-          match edge_node with
-          | None -> aux map count tl
-          | Some edge_node -> (
-              if exist edge_node.id count then aux map count tl
-              else
-                match edge_node.value with
-                | Symbol _ -> aux map count tl
-                | Number _ ->
-                    let count = edge_node :: count in
-                    if List.length count >= 2 then
-                      List.fold_left
-                        (fun acc node ->
-                          let value_int =
-                            match node.value with
-                            | Number x -> x
-                            | _ -> failwith "node is not a number..."
-                          in
-                          int_of_string value_int * acc)
-                        1 count
-                    else aux map count tl))
+      | hd :: tl -> find_edge_numbers map hd tl adjacent_numbers
+    and find_edge_numbers map edge_node rest adjacent_numbers =
+      let edge_node = Hashtbl.find_opt map edge_node in
+      match edge_node with
+      | None -> gear_ratio_aux map adjacent_numbers rest
+      | Some edge_node -> (
+          if exist edge_node.id adjacent_numbers then
+            gear_ratio_aux map adjacent_numbers rest
+          else
+            match edge_node.value with
+            | Symbol _ -> gear_ratio_aux map adjacent_numbers rest
+            | Number _ -> add_edge_number map edge_node adjacent_numbers rest)
+    and add_edge_number map edge_node adjacent_numbers rest =
+      let count = edge_node :: adjacent_numbers in
+      if List.length count >= 2 then
+        List.fold_left
+          (fun acc node ->
+            let value_int =
+              match node.value with
+              | Number x -> x
+              | _ -> failwith "node is not a number..."
+            in
+            int_of_string value_int * acc)
+          1 count
+      else gear_ratio_aux map count rest
     in
-    let gear_ratio = aux map [] node.edges in
+    let gear_ratio = gear_ratio_aux map [] node.edges in
     gear_ratio
 end
 
