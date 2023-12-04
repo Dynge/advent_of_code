@@ -28,7 +28,6 @@ let color_of int = function
   | B -> Blue int
   | _ -> failwith "illegal color token"
 
-
 let rec next_token stream =
   let next_char = read_char stream in
   match next_char with
@@ -51,14 +50,14 @@ let rec next_token stream =
         Int (int_of_string digit_string)
 
 and skip_whitespace stream =
-  let next_char = read_char stream in
+  let next_char = peek_char stream in
   match next_char with
   | None -> EOF
   | Some c ->
-      if is_whitespace c then skip_whitespace stream
-      else
-        let () = unread_char stream c in
-        next_token stream
+      if is_whitespace c then
+        let _ = read_char stream in
+        skip_whitespace stream
+      else next_token stream
 
 let parse_color stream prev_token =
   let rec aux stream prev_token color =

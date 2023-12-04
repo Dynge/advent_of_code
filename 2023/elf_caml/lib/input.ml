@@ -54,10 +54,18 @@ let read_char stm =
       let () = advance_cursor stm (Some c) in
       Some c
 
+let peek_char stm =
+  match stm.chr with
+  | None ->
+      let c = input_char stm.chan in
+      let _ = stm.chr <- c in
+      c
+  | Some _ -> failwith "cannot peek already peeked value"
+
 let unread_char stm c =
   let _ = stm.chr <- Some c in
   match stm.prev_cursor with
-  | None -> ()
+  | None -> failwith "cannot unread without a prev_cursor position"
   | Some prev ->
       let _ = stm.cursor <- prev in
       stm.prev_cursor <- None
@@ -76,19 +84,19 @@ let is_whitespace c = c = '\t' || c = ' '
 let string_of_chars chars = List.rev chars |> List.to_seq |> String.of_seq
 
 let rec read_alpha stream acc =
-  let next_char = read_char stream in
+  let next_char = peek_char stream in
   match next_char with
   | None -> string_of_chars acc
-  | Some c when not (is_alpha c) ->
-      let () = unread_char stream c in
-      string_of_chars acc
-  | Some c -> read_alpha stream (c :: acc)
+  | Some c when not (is_alpha c) -> string_of_chars acc
+  | Some c ->
+      let _ = read_char stream in
+      read_alpha stream (c :: acc)
 
 let rec read_digit stream acc =
-  let next_char = read_char stream in
+  let next_char = peek_char stream in
   match next_char with
   | None -> string_of_chars acc
-  | Some c when not (is_digit c) ->
-      let () = unread_char stream c in
-      string_of_chars acc
-  | Some c -> read_digit stream (c :: acc)
+  | Some c when not (is_digit c) -> string_of_chars acc
+  | Some c ->
+      let _ = read_char stream in
+      read_digit stream (c :: acc)
