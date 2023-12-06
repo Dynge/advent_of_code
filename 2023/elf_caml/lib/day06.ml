@@ -75,7 +75,6 @@ module BoatRace = struct
     let sqrt_b2_4ac = sqrt (float_of_int (b_squared - four_ac)) in
     let low_root = (minus_b +. sqrt_b2_4ac) /. float_of_int (2 * a) in
     let high_root = (minus_b -. sqrt_b2_4ac) /. float_of_int (2 * a) in
-    let () = Format.printf "high: %f - low %f\n" high_root low_root in
     1. +. floor high_root -. ceil low_root |> int_of_float
 end
 
