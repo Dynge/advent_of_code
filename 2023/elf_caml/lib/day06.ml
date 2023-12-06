@@ -64,7 +64,7 @@ module BoatRace = struct
                0 = -wait^2 + total_time*wait - distance
                0 = -ax^2 + bx - c
 
-        a = 1
+        a = -1
         b = time
         c = -distance
     *)
