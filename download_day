@@ -2,7 +2,7 @@
 
 read -l -P "December day: " DAY_NUM
 
-set -l YEAR 2023
+set -l YEAR 2024
 set -l YEAR_DIR "$HOME/git/advent_of_code/$YEAR/data/"
 if not test -d $YEAR_DIR
   # If directory does not exist - create it
