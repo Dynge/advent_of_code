@@ -63,7 +63,7 @@ let peek_char stm =
       let c = input_char stm.chan in
       let _ = stm.chr <- c in
       c
-  | Some _ -> failwith "cannot peek already peeked value"
+  | Some c -> Some c
 
 let unread_char stm c =
   let _ = stm.chr <- Some c in
@@ -83,6 +83,7 @@ let is_alpha c =
   (code >= Char.code 'A' && code <= Char.code 'Z')
   || (code >= Char.code 'a' && code <= Char.code 'z')
 
+let is_alphanumeric c = is_alpha c || is_digit c
 let is_whitespace c = c = '\t' || c = ' '
 let string_of_chars chars = List.rev chars |> List.to_seq |> String.of_seq
 
@@ -94,6 +95,15 @@ let rec read_alpha stream acc =
   | Some c ->
       let _ = read_char stream in
       read_alpha stream (c :: acc)
+
+let rec read_alphanumeric stream acc =
+  let next_char = peek_char stream in
+  match next_char with
+  | None -> string_of_chars acc
+  | Some c when not (is_alphanumeric c) -> string_of_chars acc
+  | Some c ->
+      let _ = read_char stream in
+      read_alphanumeric stream (c :: acc)
 
 let rec read_digit stream acc =
   let next_char = peek_char stream in

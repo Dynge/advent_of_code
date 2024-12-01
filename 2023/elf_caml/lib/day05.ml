@@ -125,11 +125,6 @@ module FarmingP1 = struct
     | { dest; source; range } :: tl ->
         if i >= source && i < source + range then
           let dest_index = i - source in
-          let () =
-            Format.printf
-              "i: %d, source: %d, dest: %d, range: %d, dest_index: %d\n" i
-              source dest range dest_index
-          in
           dest + dest_index
         else maps_to i tl
 
@@ -138,8 +133,6 @@ module FarmingP1 = struct
       | [] -> acc
       | seed :: tl ->
           let soil = maps_to seed farm.seed_to_soil in
-          let () = print_int soil in
-          let () = print_string "\n" in
           let fertilizer = maps_to soil farm.soil_to_fertilizer in
           let water = maps_to fertilizer farm.fertilizer_to_water in
           let light = maps_to water farm.water_to_light in
@@ -152,9 +145,8 @@ module FarmingP1 = struct
 end
 
 module Farming = struct
-  open FarmingP1
-
-  type seed_range = { source : int; range : int }
+  type seed_range = { start : int; length : int }
+  type type_map = { dest : int; source : int; range : int }
 
   type t = {
     seeds : seed_range list;
@@ -184,8 +176,8 @@ module Farming = struct
     let rec read_seeds acc = function
       | ([] as tl) | Newline :: Newline :: tl -> (acc |> List.rev, tl)
       | Int seed :: Int range :: tl ->
-          let source, range = (int_of_string seed, int_of_string range) in
-          read_seeds ({ source; range } :: acc) tl
+          let start, length = (int_of_string seed, int_of_string range) in
+          read_seeds ({ start; length } :: acc) tl
       | _ -> failwith "invalid token structure for numbers to list"
     in
 
@@ -231,65 +223,85 @@ module Farming = struct
       }
       tokens
 
-  let maps_to i map =
-    match map with
-    | { dest; source; range } ->
-        if i >= source && i < source + range then
-          let dest_index = i - source in
-          let () =
-            Format.printf
-              "i: %d, source: %d, dest: %d, range: %d, dest_index: %d\n" i
-              source dest range dest_index
+  let update_ranges map ranges =
+    let rec update_ranges_aux acc map = function
+      | [] -> acc
+      | hd :: tl ->
+          let r_start, r_range_ex = (hd.start, hd.length) in
+          let r_end_ex = r_start + r_range_ex in
+          let map_end_ex = map.source + map.range in
+          let offset = map.dest - map.source in
+          let split_ranges =
+            if r_end_ex <= map.source || r_start >= map_end_ex then [ hd ]
+            else if r_start >= map.source && r_end_ex <= map_end_ex then
+              [ { hd with start = hd.start + offset } ]
+            else if r_start < map.source && r_end_ex > map_end_ex then
+              let low_range = map.source - (r_start + 1) in
+              let high_range = r_range_ex - low_range - map.range in
+              [
+                { start = r_start; length = low_range };
+                { start = map.dest; length = map.range };
+                { start = map.source + map.range; length = high_range };
+              ]
+            else if r_start >= map.source then
+              let low_range = map_end_ex - r_start in
+              let high_range = r_end_ex - map_end_ex in
+              [
+                { start = r_start + offset; length = low_range };
+                { start = map_end_ex; length = high_range };
+              ]
+            else if r_start < map.source then
+              let low_range = map.source - (r_start + 1) in
+              let high_range = r_end_ex - map.source in
+              [
+                { start = r_start; length = low_range };
+                { start = map.dest; length = high_range };
+              ]
+            else
+              (* let _ = *)
+              (*   Format.printf *)
+              (* "map.source: %d - map_end_ex: %d - map.range: %d\n\ *)
+                 (*      r_start: %d - r_end: %d - r_range: %d\n" *)
+              (*     map.source map_end_ex map.range r_start r_end_ex r_range_ex *)
+              (* in *)
+              failwith "did not expect another option"
           in
-          dest + dest_index
-        else i
+          (* let _ = *)
+          (*   Format.printf "map.dest: %d - map.source: %d - map.range: %d\n" *)
+          (*     map.dest map.source map.range *)
+          (* in *)
+          update_ranges_aux (acc @ split_ranges) map tl
+    in
+    update_ranges_aux [] map ranges
 
-  let rec maps_to_low_high (low, high) = function
-    | [] -> (low, high)
-    | ({ dest; source; range } as map) :: tl ->
-        let max_source = source + range - 1 in
-        if
-          (low > source && high > source)
-          || (low < max_source && high < max_source)
-        then (* completely outside range *)
-          (low, high)
-        else
-          let low =
-            let low_map = maps_to low map in
-            if low > source || low < source then low_map
-            else if source < low_map then dest
-            else low_map
-          in
-
-          let high =
-            let high_map = maps_to high map in
-            if high_map < dest + range then high_map
-            else if source + range > high_map then dest
-            else high_map
-          in
-
-          let low = min low high in
-          let high = max low high in
-          maps_to_low_high (low, high) tl
+  let rec maps_to_ranges ranges = function
+    | [] -> ranges
+    | hd :: tl ->
+        let new_ranges = update_ranges hd ranges in
+        (* let _ = Format.printf "Range size: %d\n" (List.length new_ranges) in *)
+        (* let _ = *)
+        (*   List.map *)
+        (*     (fun range -> *)
+        (*       Format.printf "r_start: %d - r_range: %d\n" range.start *)
+        (*         range.length) *)
+        (*     new_ranges *)
+        (* in *)
+        maps_to_ranges new_ranges tl
 
   let get_locations farm =
     let rec location_aux acc farm = function
       | [] -> acc
       | seed :: tl ->
-          let soil =
-            maps_to_low_high
-              (seed.source, seed.source + seed.range)
-              farm.seed_to_soil
-          in
-          let fertilizer = maps_to_low_high soil farm.soil_to_fertilizer in
-          let water = maps_to_low_high fertilizer farm.fertilizer_to_water in
-          let light = maps_to_low_high water farm.water_to_light in
-          let temperature = maps_to_low_high light farm.light_to_temperature in
+          let soil = maps_to_ranges [ seed ] farm.seed_to_soil in
+          let fertilizer = maps_to_ranges soil farm.soil_to_fertilizer in
+          let water = maps_to_ranges fertilizer farm.fertilizer_to_water in
+          let light = maps_to_ranges water farm.water_to_light in
+          let temperature = maps_to_ranges light farm.light_to_temperature in
           let humidity =
-            maps_to_low_high temperature farm.temperature_to_humidity
+            maps_to_ranges temperature farm.temperature_to_humidity
           in
-          let location = maps_to_low_high humidity farm.humidity_to_location in
-          location_aux (location :: acc) farm tl
+          let location = maps_to_ranges humidity farm.humidity_to_location in
+          location_aux (location @ acc) farm tl
     in
     location_aux [] farm farm.seeds
 end
@@ -310,10 +322,20 @@ let solution () =
 
   let farm = Farming.parse tokens in
   let locations = Farming.get_locations farm in
+
+  (* let _ = Format.printf "Location size: %d\n" (List.length locations) in *)
+  (* let _ = *)
+  (*   List.map *)
+  (*     (fun range -> *)
+  (*       let open Farming in *)
+  (*       Format.printf "r_start: %d - r_range: %d\n" range.start range.length) *)
+  (*     locations *)
+  (* in *)
   let min_location =
     List.fold_left
-      (fun acc (low, _) ->
-        let minimum = min acc low in
+      (fun acc range ->
+        let open Farming in
+        let minimum = min acc range.start in
         minimum)
       max_int locations
   in
