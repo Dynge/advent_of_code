@@ -23,5 +23,8 @@ if not test -f "session_cookie.txt"
     echo "session=$cookie" > session_cookie.txt
 end
 set -l SESSION_COOKIE (cat session_cookie.txt)
-echo "Downloading data into '$YEAR_DIR/day$DAY_NUM.txt'..."
-curl -H "Cookie: $SESSION_COOKIE" https://adventofcode.com/$YEAR/day/$DAY_NUM/input --output "$YEAR_DIR/day$DAY_NUM.txt"
+set -l data_file "$YEAR_DIR/day$DAY_NUM.txt"
+echo -e "Downloading data into '$data_file'..."
+curl -H "Cookie: $SESSION_COOKIE" https://adventofcode.com/$YEAR/day/$DAY_NUM/input --output $data_file
+
+echo -e "\nPreview:" && head $data_file && echo "..."
