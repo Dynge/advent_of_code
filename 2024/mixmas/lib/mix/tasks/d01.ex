@@ -3,7 +3,7 @@ defmodule Mix.Tasks.D01 do
 
   @shortdoc "Day 01 Part 1"
   def run(_args) do
-    {ok, data} = File.read("../data/day1.txt")
+    data = File.read!("../data/day1.txt")
     lines = String.split(data, "\n", trim: true)
     {left, right} = into_lists(lines, [], [])
     sorted_left = Enum.sort(left)
@@ -47,7 +47,7 @@ defmodule Mix.Tasks.D01 do
     end
   end
 
-  def find_occurences(value, [], hits) do
+  def find_occurences(_value, [], hits) do
     hits
   end
 

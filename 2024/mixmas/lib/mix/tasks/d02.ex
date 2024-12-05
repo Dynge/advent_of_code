@@ -1,5 +1,4 @@
 defmodule Mix.Tasks.D02 do
-  alias Hex.Crypto.Encryption
   use Mix.Task
 
   @shortdoc "Day 01 Part 1"
