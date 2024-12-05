@@ -1,15 +1,27 @@
 #!/usr/bin/env fish
 
-read -l -P "December day: " DAY_NUM
+argparse 'd/day=' 'y/year=' -- $argv
+set -f DAY_NUM "$_flag_day"
+set -f YEAR "$_flag_year"
 
-set -l YEAR 2024
-set -l YEAR_DIR "$HOME/git/advent_of_code/$YEAR/data/"
-if not test -d $YEAR_DIR
-  # If directory does not exist - create it
-  echo "Creating directory '$YEAR_DIR'..."
-  mkdir $YEAR_DIR -p
+if test -z "$DAY_NUM"
+    set -f DAY_NUM "$(date +"%-d")"
+end
+if test -z "$YEAR"
+    set -f YEAR "$(date +"%Y")"
 end
 
-set -l SESSION_COOKIE (cat $HOME/git/advent_of_code/session_cookie.txt)
+set -f YEAR_DIR "$YEAR/data"
+if not test -d $YEAR_DIR
+    # If directory does not exist - create it
+    echo "Creating directory '$YEAR_DIR'..."
+    mkdir $YEAR_DIR -p
+end
+
+if not test -f "session_cookie.txt"
+    read -l --prompt-str "Please provide session cookie: " cookie
+    echo "session=$cookie" > session_cookie.txt
+end
+set -l SESSION_COOKIE (cat session_cookie.txt)
 echo "Downloading data into '$YEAR_DIR/day$DAY_NUM.txt'..."
 curl -H "Cookie: $SESSION_COOKIE" https://adventofcode.com/$YEAR/day/$DAY_NUM/input --output "$YEAR_DIR/day$DAY_NUM.txt"
