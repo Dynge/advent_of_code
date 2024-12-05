@@ -22,8 +22,6 @@ defmodule Mix.Tasks.D04 do
     {row, col} = im_parts(idx)
     {row_size, col_size} = tensor |> Nx.shape()
 
-    IO.inspect(idx)
-
     cond do
       row >= row_size ->
         cross_count
@@ -34,7 +32,6 @@ defmodule Mix.Tasks.D04 do
       true ->
         case tensor |> num_at(idx) do
           ?A ->
-            IO.inspect(idx)
             xmas_cross(tensor, idx, ?A, cross_count)
 
           _ ->
@@ -78,8 +75,6 @@ defmodule Mix.Tasks.D04 do
         end
       end)
       |> MapSet.new()
-
-    IO.inspect(mas)
 
     if right_cross |> MapSet.equal?(mas) and left_cross |> MapSet.equal?(mas) do
       xmas_cross(tensor, move_right(idx), nil, cross_count + 1)
