@@ -8,8 +8,10 @@ defmodule Mix.Tasks.D00 do
   end
 
   defp part1(_) do
+    ""
   end
 
   defp part2(_) do
+    ""
   end
 end
