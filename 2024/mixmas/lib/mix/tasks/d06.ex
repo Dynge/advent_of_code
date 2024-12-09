@@ -26,11 +26,9 @@ defmodule Mix.Tasks.D06 do
     else
       case MapSet.member?(blocks, loc) do
         true ->
-          IO.inspect(turn_right(dir))
           move({cursor, turn_right(dir)}, blocks, visited)
 
         false ->
-          IO.inspect(loc)
           new_visited = MapSet.put(visited, loc)
           move({loc, dir}, blocks, new_visited)
       end
@@ -48,11 +46,9 @@ defmodule Mix.Tasks.D06 do
   end
 
   defp turn_right(dir) do
-    {_, phi} = Complex.to_polar(dir)
-    rad = :math.pi() * 90 / 180
-    IO.inspect(rad)
-    new = Complex.from_polar(1, phi - rad)
-    Complex.new(round(Complex.real(new)), round(Complex.imag(new)))
+    ninety_in_radian = :math.pi() / -2
+    rotated_dir = Complex.new(0, ninety_in_radian) |> Complex.exp() |> Complex.multiply(dir)
+    Complex.new(round(Complex.real(rotated_dir)), round(Complex.imag(rotated_dir)))
   end
 
   defp parse() do

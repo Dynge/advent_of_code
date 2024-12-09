@@ -10,8 +10,7 @@ defmodule Mix.Tasks.D05 do
 
   defp part1(rules, updates) do
     correct_rules(updates, rules, [])
-    |>
-      Enum.sum()
+    |> Enum.sum()
     |> Integer.to_string()
   end
 
