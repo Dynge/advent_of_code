@@ -25,10 +25,11 @@ defmodule Mix.Tasks.D11 do
 
   defp blink([{stone, count} | stone_tail], transformed) do
     plus = fn v -> v + count end
+    update_stone = fn updated_stones, v -> updated_stones |> Map.update(v, count, plus) end
 
     case Integer.to_string(stone) do
       "0" ->
-        blink(stone_tail, Map.update(transformed, 1, count, plus))
+        blink(stone_tail, transformed |> update_stone.(1))
 
       x ->
         len = String.length(x)
@@ -41,11 +42,16 @@ defmodule Mix.Tasks.D11 do
 
             blink(
               stone_tail,
-              transformed |> Map.update(left, count, plus) |> Map.update(right, count, plus)
+              transformed |> update_stone.(left) |> update_stone.(right)
             )
 
           _ ->
-            blink(stone_tail, transformed |> Map.update(stone * 2024, count, plus))
+            its_christmas_damnit = 2024
+
+            blink(
+              stone_tail,
+              transformed |> update_stone.(stone * its_christmas_damnit)
+            )
         end
     end
   end
